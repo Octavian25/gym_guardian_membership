@@ -1,0 +1,2 @@
+abstract class PreviewRegistrationLocalDataSource {}
+class PreviewRegistrationLocalDataSourceImpl implements PreviewRegistrationLocalDataSource {}

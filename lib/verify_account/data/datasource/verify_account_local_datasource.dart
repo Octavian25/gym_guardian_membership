@@ -1,0 +1,2 @@
+abstract class VerifyAccountLocalDataSource {}
+class VerifyAccountLocalDataSourceImpl implements VerifyAccountLocalDataSource {}

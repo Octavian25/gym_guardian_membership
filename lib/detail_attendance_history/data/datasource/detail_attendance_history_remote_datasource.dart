@@ -1,0 +1,2 @@
+abstract class DetailAttendanceHistoryRemoteDataSource {}
+class DetailAttendanceHistoryRemoteDataSourceImpl implements DetailAttendanceHistoryRemoteDataSource {}

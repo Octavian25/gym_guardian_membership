@@ -1,0 +1,2 @@
+abstract class DetailPointLocalDataSource {}
+class DetailPointLocalDataSourceImpl implements DetailPointLocalDataSource {}

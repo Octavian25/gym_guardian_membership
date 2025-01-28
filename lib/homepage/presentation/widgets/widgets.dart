@@ -1,0 +1,36 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:gym_guardian_membership/homepage/domain/entities/activity_member_entity.dart';
+import 'package:gym_guardian_membership/homepage/domain/entities/booking_entity.dart';
+import 'package:gym_guardian_membership/homepage/domain/entities/register_attendance_reponse_entity.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/cancel_booking_bloc/cancel_booking_bloc.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/check_booking_slot_left_bloc/check_booking_slot_left_bloc.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/detail_member_bloc/detail_member_bloc.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_booking_bloc/fetch_last_three_booking_bloc.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/request_booking_bloc/request_booking_bloc.dart';
+import 'package:gym_guardian_membership/login/presentation/widgets/primary_button.dart';
+import 'package:gym_guardian_membership/pricing_plan/presentation/pages/pricing_plan_screen.dart';
+import 'package:gym_guardian_membership/utility/blurred_dialogue_widget.dart';
+import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/custom_toast.dart';
+import 'package:gym_guardian_membership/utility/empty_state_widget.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
+import 'package:gym_guardian_membership/utility/router.dart';
+import 'package:gym_guardian_membership/utility/show_bottom_dialog.dart';
+import 'package:os_basecode/os_basecode.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:socket_io_client/socket_io_client.dart' as socket_io;
+
+part 'loyality_information_widget.dart';
+part 'booking_slot_information_widget.dart';
+part 'app_bar_homepage.dart';
+part 'add_booking.dart';
+part 'detail_booking.dart';
+part 'detail_attendance.dart';
+part 'detail_attendance_out.dart';
+part 'detail_attendance_popup.dart';
+part 'detail_attendance_out_popup.dart';
+part 'last_three_booking_widget.dart';

@@ -1,0 +1,2 @@
+abstract class SplashscreenRemoteDataSource {}
+class SplashscreenRemoteDataSourceImpl implements SplashscreenRemoteDataSource {}

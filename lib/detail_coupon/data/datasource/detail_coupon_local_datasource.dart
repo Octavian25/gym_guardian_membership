@@ -1,0 +1,2 @@
+abstract class DetailCouponLocalDataSource {}
+class DetailCouponLocalDataSourceImpl implements DetailCouponLocalDataSource {}

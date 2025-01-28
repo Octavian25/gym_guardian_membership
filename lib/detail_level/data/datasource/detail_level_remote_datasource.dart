@@ -1,0 +1,2 @@
+abstract class DetailLevelRemoteDataSource {}
+class DetailLevelRemoteDataSourceImpl implements DetailLevelRemoteDataSource {}

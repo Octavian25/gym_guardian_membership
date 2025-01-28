@@ -1,0 +1,2 @@
+abstract class DetailAttendanceHistoryLocalDataSource {}
+class DetailAttendanceHistoryLocalDataSourceImpl implements DetailAttendanceHistoryLocalDataSource {}

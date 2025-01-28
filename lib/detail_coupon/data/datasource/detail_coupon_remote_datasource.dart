@@ -1,0 +1,2 @@
+abstract class DetailCouponRemoteDataSource {}
+class DetailCouponRemoteDataSourceImpl implements DetailCouponRemoteDataSource {}

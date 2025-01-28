@@ -1,0 +1,2 @@
+abstract class PricingPlanLocalDataSource {}
+class PricingPlanLocalDataSourceImpl implements PricingPlanLocalDataSource {}

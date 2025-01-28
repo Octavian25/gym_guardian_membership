@@ -1,0 +1,8 @@
+import '../datasource/detail_attendance_history_local_datasource.dart';
+import '../datasource/detail_attendance_history_remote_datasource.dart';
+import '../../domain/repository/repository.dart';
+class DetailAttendanceHistoryRepositoryImpl implements DetailAttendanceHistoryRepository {
+DetailAttendanceHistoryLocalDataSource detailAttendanceHistoryLocalDataSource;
+DetailAttendanceHistoryRemoteDataSource detailAttendanceHistoryRemoteDataSource;
+DetailAttendanceHistoryRepositoryImpl(this.detailAttendanceHistoryLocalDataSource, this.detailAttendanceHistoryRemoteDataSource);
+}

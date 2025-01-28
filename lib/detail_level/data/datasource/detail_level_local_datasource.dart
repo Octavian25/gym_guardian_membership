@@ -1,0 +1,2 @@
+abstract class DetailLevelLocalDataSource {}
+class DetailLevelLocalDataSourceImpl implements DetailLevelLocalDataSource {}
