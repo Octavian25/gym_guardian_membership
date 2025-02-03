@@ -10,7 +10,6 @@ import 'package:gym_guardian_membership/redeemable_item/presentation/bloc/fetch_
 import 'package:gym_guardian_membership/redeemable_item/presentation/bloc/redeem_item_bloc/redeem_item_bloc.dart';
 import 'package:gym_guardian_membership/utility/base_sliver_padding.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
-import 'package:gym_guardian_membership/utility/custom_toast.dart';
 import 'package:gym_guardian_membership/utility/empty_state_widget.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_dialog.dart';

@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:gym_guardian_membership/detail_attendance_history/presentation/bloc/fetch_activity_member_bloc/fetch_activity_member_bloc.dart';
 import 'package:gym_guardian_membership/redeem_history/domain/usecase/cancel_redeem_item.dart';
 import 'package:meta/meta.dart';
 

@@ -1,9 +1,5 @@
-import 'package:dartz/dartz.dart';
-
 import 'package:gym_guardian_membership/redeem_history/domain/entities/redeem_history_entity.dart';
 import 'package:os_basecode/os_basecode.dart';
-
-import 'package:os_basecode/utilities/failure.dart';
 
 import '../datasource/redeem_history_local_datasource.dart';
 import '../datasource/redeem_history_remote_datasource.dart';

@@ -46,6 +46,8 @@ dependencies:
     path: os_beacon_finder
   skeletonizer: ^1.4.3
   flutter_gemini: ^3.0.0
+  calendar_view: ^1.4.0
+  y_player: ^2.0.4
 
 flutter_launcher_icons:
   #  image_path: "assets/images/icon-128x128.png"

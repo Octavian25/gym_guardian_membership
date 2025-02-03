@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:os_basecode/os_basecode.dart';
 
-TextStyle bebasNeue = GoogleFonts.bebasNeue();
+TextStyle bebasNeue = GoogleFonts.bebasNeue(height: 0.9);
 Color primaryColor = "#B0C929".toColor();
+Color onPrimaryColor = "#2D4500".toColor();
 EdgeInsets baseHorizontalPadding = EdgeInsets.symmetric(horizontal: 16);
 List<String> anthusiastMessage = [
   "You’re an inspiration! This achievement is proof of your hard work and dedication. Keep striving for excellence!",
@@ -46,8 +47,8 @@ enum MotivationEnum { kesehatan, penampilan, kebiasaanHidupSehat, aktivitasSosia
 enum HighIntensityWorkoutEnum { tidakNyaman, nyaman, sangatNyaman }
 
 const geminiKey = 'AIzaSyC9BrMYUFeBhYrdAfdP7Gj-5buQv1BRE-g';
-// const baseURL = "http://192.168.0.9:5555/";
-const baseURL = "https://103.150.191.156:44444/";
+const baseURL = "http://192.168.0.9:5555/";
+// const baseURL = "https://103.150.191.156:44444/";
 String appVersion = "1.0.5";
 //SHAREDPREFERENCE KEY
 const accessToken = "access_token";
@@ -64,6 +65,7 @@ const pricingPlanAPI = "$apiVersion/packages";
 const memberAPI = "$apiVersion/members";
 const redeemableItemAPI = "$apiVersion/redeemable-items";
 const redeemHistoryAPI = "$apiVersion/redeem-histories";
+const gymEquipmentAPI = "$apiVersion/gym-equipments";
 const redeemHistoryByMemberAPI = "$redeemHistoryAPI/mobile";
 const redeemableItemPaginatedAPI = "$redeemableItemAPI/mobile";
 const memberAttendanceAPI = "$memberAPI/mobile/attendance";

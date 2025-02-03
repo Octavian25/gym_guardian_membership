@@ -11,6 +11,7 @@ import 'package:gym_guardian_membership/homepage/domain/repository/repository.da
 import 'package:gym_guardian_membership/homepage/domain/usecase/cancel_booking.dart';
 import 'package:gym_guardian_membership/homepage/domain/usecase/check_booking_slot_left.dart';
 import 'package:gym_guardian_membership/homepage/domain/usecase/fetch_activity_member_by_code.dart';
+import 'package:gym_guardian_membership/homepage/domain/usecase/fetch_all_gym_equipment.dart';
 import 'package:gym_guardian_membership/homepage/domain/usecase/fetch_booking_member.dart';
 import 'package:gym_guardian_membership/homepage/domain/usecase/fetch_detail_member_by_email.dart';
 import 'package:gym_guardian_membership/homepage/domain/usecase/logout_member.dart';
@@ -20,6 +21,7 @@ import 'package:gym_guardian_membership/homepage/presentation/bloc/cancel_bookin
 import 'package:gym_guardian_membership/homepage/presentation/bloc/check_booking_slot_left_bloc/check_booking_slot_left_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/detail_member_bloc/detail_member_bloc.dart';
 import 'package:gym_guardian_membership/detail_attendance_history/presentation/bloc/fetch_activity_member_bloc/fetch_activity_member_bloc.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_all_gym_equipment_bloc/fetch_all_gym_equipment_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_booking_bloc/fetch_booking_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_activity_member_bloc/fetch_last_three_activity_member_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_booking_bloc/fetch_last_three_booking_bloc.dart';
@@ -69,6 +71,7 @@ import 'package:gym_guardian_membership/register/domain/usecase/register_member.
 import 'package:gym_guardian_membership/register/presentation/bloc/register_member_bloc/register_member_bloc.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/router.dart';
+import 'package:gym_guardian_membership/workout_recommendation/presentation/bloc/chat_history_bloc/chat_history_bloc.dart';
 
 import 'package:os_basecode/os_basecode.dart';
 
@@ -141,6 +144,10 @@ void initLocator() {
   locator.registerLazySingleton<RequestBookingBloc>(() => RequestBookingBloc(locator()));
   locator.registerLazySingleton<FetchActivityMemberBloc>(() => FetchActivityMemberBloc(locator()));
   locator.registerLazySingleton<FetchBookingUsecase>(() => FetchBookingUsecase(locator()));
+  locator.registerLazySingleton<FetchAllGymEquipmentUsecase>(
+      () => FetchAllGymEquipmentUsecase(locator()));
+  locator
+      .registerLazySingleton<FetchAllGymEquipmentBloc>(() => FetchAllGymEquipmentBloc(locator()));
   locator.registerLazySingleton<FetchBookingBloc>(() => FetchBookingBloc(locator()));
   locator.registerLazySingleton<CancelBookingUsecase>(() => CancelBookingUsecase(locator()));
   locator.registerLazySingleton<CancelBookingBloc>(() => CancelBookingBloc(locator()));
@@ -207,6 +214,9 @@ void initLocator() {
         locator(),
       ));
   locator.registerLazySingleton<CancelRedeemItemBloc>(() => CancelRedeemItemBloc(
+        locator(),
+      ));
+  locator.registerLazySingleton<ChatHistoryBloc>(() => ChatHistoryBloc(
         locator(),
       ));
 }

@@ -1,7 +1,5 @@
-import 'package:gym_guardian_membership/preview_registration/data/models/preview_registration_model.dart';
 import 'package:gym_guardian_membership/preview_registration/domain/entities/preview_registration_model.dart';
 import 'package:gym_guardian_membership/pricing_plan/data/models/pricing_plan_model.dart';
-import 'package:gym_guardian_membership/pricing_plan/domain/entities/pricing_plan_entity.dart';
 
 class PreviewRegistrationModel {
   String fullName;

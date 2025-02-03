@@ -1,0 +1,8 @@
+import '../datasource/register_body_measurement_tracker_local_datasource.dart';
+import '../datasource/register_body_measurement_tracker_remote_datasource.dart';
+import '../../domain/repository/repository.dart';
+class RegisterBodyMeasurementTrackerRepositoryImpl implements RegisterBodyMeasurementTrackerRepository {
+RegisterBodyMeasurementTrackerLocalDataSource registerBodyMeasurementTrackerLocalDataSource;
+RegisterBodyMeasurementTrackerRemoteDataSource registerBodyMeasurementTrackerRemoteDataSource;
+RegisterBodyMeasurementTrackerRepositoryImpl(this.registerBodyMeasurementTrackerLocalDataSource, this.registerBodyMeasurementTrackerRemoteDataSource);
+}

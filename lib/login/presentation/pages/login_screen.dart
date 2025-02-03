@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/logout_member_bloc/logout_member_bloc.dart';
 import 'package:gym_guardian_membership/login/presentation/bloc/login_member_bloc/login_member_bloc.dart';
-import 'package:gym_guardian_membership/login/presentation/widgets/connect_with_google.dart';
 import 'package:gym_guardian_membership/login/presentation/widgets/primary_button.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/custom_text_form_field.dart';
 import 'package:gym_guardian_membership/utility/custom_toast.dart';
+import 'package:gym_guardian_membership/utility/gemini_helper.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_dialog.dart';
 import 'package:os_basecode/os_basecode.dart';
@@ -59,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback(
       (timeStamp) async {
+        removePreviousResult();
         if (Platform.isAndroid) {
           await UpdateManager.instance.checkForUpdate(
               "LoyalityMembership", // App name
@@ -131,6 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: emailController,
                         title: "Alamat Email",
                         isRequired: true,
+                        textInputType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next),
                     14.verticalSpacingRadius,
                     CustomTextFormField(

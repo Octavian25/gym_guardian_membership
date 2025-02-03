@@ -12,7 +12,7 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 55,
+      height: 45,
       width: 1.sw,
       child: FilledButton(
         style: ButtonStyle(
@@ -22,7 +22,7 @@ class PrimaryButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           title,
-          style: bebasNeue.copyWith(color: Colors.white, fontSize: 22.spMin),
+          style: bebasNeue.copyWith(color: Colors.white, fontSize: 20.spMin),
         ),
       ),
     );

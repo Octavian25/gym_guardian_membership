@@ -28,15 +28,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController repasswordController = TextEditingController();
-  final TextEditingController genderController = TextEditingController();
-  final TextEditingController goalController = TextEditingController();
-  final TextEditingController activityLevelController = TextEditingController();
-  final TextEditingController workoutPreferenceController = TextEditingController();
-  final TextEditingController workoutDurationController = TextEditingController();
-  final TextEditingController workoutAtController = TextEditingController();
-  final TextEditingController specialConditionController = TextEditingController();
+  final TextEditingController genderController = TextEditingController(text: "Pria");
+  final TextEditingController goalController = TextEditingController(text: "Membentuk Otot");
+  final TextEditingController activityLevelController =
+      TextEditingController(text: "Jarang Olahraga");
+  final TextEditingController workoutPreferenceController =
+      TextEditingController(text: 'Latihan Di Gym');
+  final TextEditingController workoutDurationController =
+      TextEditingController(text: '15-30 Menit');
+  final TextEditingController workoutAtController = TextEditingController(text: 'Pagi Hari');
+  final TextEditingController specialConditionController = TextEditingController(text: 'Tidak Ada');
   final TextEditingController conditionController = TextEditingController();
-  final TextEditingController motivationController = TextEditingController();
+  final TextEditingController motivationController = TextEditingController(text: 'Kesehatan');
   String gender = "Pria";
   String goal = "Membentuk Otot";
   String activityLevel = "Jarang Olahraga";

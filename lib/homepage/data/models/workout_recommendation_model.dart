@@ -129,65 +129,65 @@ class WeeklyPlan {
 }
 
 class Workout {
-  final int durasi;
-  final List<Aktivita> aktivitas;
+  final int duration;
+  final List<Aktivita> activity;
 
   Workout({
-    required this.durasi,
-    required this.aktivitas,
+    required this.duration,
+    required this.activity,
   });
 
   Workout copyWith({
-    int? durasi,
-    List<Aktivita>? aktivitas,
+    int? duration,
+    List<Aktivita>? activity,
   }) =>
       Workout(
-        durasi: durasi ?? this.durasi,
-        aktivitas: aktivitas ?? this.aktivitas,
+        duration: duration ?? this.duration,
+        activity: activity ?? this.activity,
       );
 
   factory Workout.fromJson(Map<String, dynamic> json) => Workout(
-        durasi: json["durasi"],
-        aktivitas: List<Aktivita>.from(json["aktivitas"].map((x) => Aktivita.fromJson(x))),
+        duration: json["duration"],
+        activity: List<Aktivita>.from(json["activity"].map((x) => Aktivita.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "durasi": durasi,
-        "aktivitas": List<dynamic>.from(aktivitas.map((x) => x.toJson())),
+        "duration": duration,
+        "activity": List<dynamic>.from(activity.map((x) => x.toJson())),
       };
 }
 
 class Aktivita {
-  final String nama;
-  final int waktu;
-  final String deskripsi;
+  final String name;
+  final int duration;
+  final String description;
 
   Aktivita({
-    required this.nama,
-    required this.waktu,
-    required this.deskripsi,
+    required this.name,
+    required this.duration,
+    required this.description,
   });
 
   Aktivita copyWith({
-    String? nama,
-    int? waktu,
-    String? deskripsi,
+    String? name,
+    int? duration,
+    String? description,
   }) =>
       Aktivita(
-        nama: nama ?? this.nama,
-        waktu: waktu ?? this.waktu,
-        deskripsi: deskripsi ?? this.deskripsi,
+        name: name ?? this.name,
+        duration: duration ?? this.duration,
+        description: description ?? this.description,
       );
 
   factory Aktivita.fromJson(Map<String, dynamic> json) => Aktivita(
-        nama: json["nama"],
-        waktu: json["waktu"],
-        deskripsi: json["deskripsi"],
+        name: json["name"],
+        duration: json["duration"],
+        description: json["description"],
       );
 
   Map<String, dynamic> toJson() => {
-        "nama": nama,
-        "waktu": waktu,
-        "deskripsi": deskripsi,
+        "name": name,
+        "duraiton": duration,
+        "description": description,
       };
 }

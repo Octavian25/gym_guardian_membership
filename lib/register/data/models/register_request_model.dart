@@ -9,10 +9,13 @@ class RegisterRequestModel {
   final int age;
   final int weight;
   final int height;
+  final String workoutDuration;
   final String activityLevel;
   final String fitnessGoal;
+  final String gender;
   final List<String> workoutPreferences;
   final String availableTime;
+  final String specialCondition;
 
   RegisterRequestModel(
       {required this.memberName,
@@ -25,7 +28,10 @@ class RegisterRequestModel {
       required this.height,
       required this.activityLevel,
       required this.fitnessGoal,
+      required this.specialCondition,
       required this.workoutPreferences,
+      required this.workoutDuration,
+      required this.gender,
       required this.availableTime});
 
   RegisterRequestEntity toEntity() => RegisterRequestEntity(
@@ -40,6 +46,9 @@ class RegisterRequestModel {
       fitnessGoal: fitnessGoal,
       height: height,
       weight: weight,
+      specialCondition: specialCondition,
+      workoutDuration: workoutDuration,
+      gender: gender,
       workoutPreferences: workoutPreferences);
 
   RegisterRequestModel copyWith(
@@ -53,6 +62,9 @@ class RegisterRequestModel {
           int? height,
           String? activityLevel,
           String? fitnessGoal,
+          String? specialCondition,
+          String? workoutDuration,
+          String? gender,
           List<String>? workoutPreferences,
           String? availableTime}) =>
       RegisterRequestModel(
@@ -64,9 +76,12 @@ class RegisterRequestModel {
           age: age ?? this.age,
           weight: weight ?? this.weight,
           height: height ?? this.height,
+          specialCondition: specialCondition ?? this.specialCondition,
           activityLevel: activityLevel ?? this.activityLevel,
           fitnessGoal: fitnessGoal ?? this.fitnessGoal,
           workoutPreferences: workoutPreferences ?? this.workoutPreferences,
+          workoutDuration: workoutDuration ?? this.workoutDuration,
+          gender: gender ?? this.gender,
           availableTime: availableTime ?? this.availableTime);
 
   factory RegisterRequestModel.fromJson(Map<String, dynamic> json) => RegisterRequestModel(
@@ -81,6 +96,9 @@ class RegisterRequestModel {
       fitnessGoal: json["fitness_goal"],
       height: json['height'],
       weight: json['weight'],
+      specialCondition: json['special_condition'],
+      workoutDuration: json['workout_duration'],
+      gender: json['gender'],
       workoutPreferences: List<String>.from(json['workout_preferences'].map((x) => x)));
 
   Map<String, dynamic> toJson() => {
@@ -93,8 +111,11 @@ class RegisterRequestModel {
         "age": age,
         "available_time": availableTime,
         "fitness_goal": fitnessGoal,
-        "heigt": height,
+        "height": height,
         "weight": weight,
+        "gender": gender,
+        "special_condition": specialCondition,
+        "workout_duration": workoutDuration,
         "workout_preferences": List<dynamic>.from(workoutPreferences.map((x) => x))
       };
 }

@@ -1,0 +1,2 @@
+abstract class BodyMeasurementTrackerLocalDataSource {}
+class BodyMeasurementTrackerLocalDataSourceImpl implements BodyMeasurementTrackerLocalDataSource {}

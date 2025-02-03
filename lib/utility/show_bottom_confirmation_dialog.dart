@@ -11,17 +11,18 @@ Future<void> showBottomConfirmationDialogueAlert(
     required String title,
     required String subtitle,
     required Function(BuildContext context) handleConfirm,
-    BuildContext? buildContext}) async {
+    BuildContext? buildContext,
+    String? buttonText}) async {
   return showBlurredBottomSheet(
     context: buildContext ?? parentKey.currentContext!,
     builder: (context) {
       return BlurContainerWrapper(
         child: ShowBottomDialogueAlert(
-          imagePath: imagePath,
-          title: title,
-          subtitle: subtitle,
-          handleConfirm: handleConfirm,
-        ),
+            imagePath: imagePath,
+            title: title,
+            subtitle: subtitle,
+            handleConfirm: handleConfirm,
+            buttonText: buttonText),
       );
     },
   );
@@ -31,12 +32,14 @@ class ShowBottomDialogueAlert extends StatefulWidget {
   final String imagePath;
   final String title;
   final String subtitle;
+  final String? buttonText;
   final Function(BuildContext context) handleConfirm;
   const ShowBottomDialogueAlert(
       {super.key,
       required this.imagePath,
       required this.title,
       required this.subtitle,
+      required this.buttonText,
       required this.handleConfirm});
 
   @override
@@ -72,6 +75,7 @@ class _ShowBottomDialogueAlertState extends State<ShowBottomDialogueAlert>
               style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
             ),
           ),
+          5.verticalSpacingRadius,
           Center(
             child: Text(
               widget.subtitle,
@@ -81,7 +85,7 @@ class _ShowBottomDialogueAlertState extends State<ShowBottomDialogueAlert>
           ),
           20.verticalSpacingRadius,
           PrimaryButton(
-              title: "OK",
+              title: widget.buttonText ?? "OK",
               onPressed: () {
                 widget.handleConfirm(context);
               }),

@@ -13,6 +13,9 @@ class RegisterRequestEntity {
   final String fitnessGoal;
   final List<String> workoutPreferences;
   final String availableTime;
+  final String specialCondition;
+  final String workoutDuration;
+  final String gender;
 
   RegisterRequestEntity(
       {required this.memberName,
@@ -25,7 +28,10 @@ class RegisterRequestEntity {
       required this.height,
       required this.activityLevel,
       required this.fitnessGoal,
+      required this.specialCondition,
       required this.workoutPreferences,
+      required this.workoutDuration,
+      required this.gender,
       required this.availableTime});
 
   RegisterRequestModel toModel() => RegisterRequestModel(
@@ -38,6 +44,9 @@ class RegisterRequestEntity {
       age: age,
       availableTime: availableTime,
       fitnessGoal: fitnessGoal,
+      specialCondition: specialCondition,
+      workoutDuration: workoutDuration,
+      gender: gender,
       height: height,
       weight: weight,
       workoutPreferences: workoutPreferences);
@@ -53,6 +62,9 @@ class RegisterRequestEntity {
           int? height,
           String? activityLevel,
           String? fitnessGoal,
+          String? specialCondition,
+          String? workoutDuration,
+          String? gender,
           List<String>? workoutPreferences,
           String? availableTime}) =>
       RegisterRequestEntity(
@@ -64,9 +76,12 @@ class RegisterRequestEntity {
           age: age ?? this.age,
           weight: weight ?? this.weight,
           height: height ?? this.height,
+          specialCondition: specialCondition ?? this.specialCondition,
           activityLevel: activityLevel ?? this.activityLevel,
           fitnessGoal: fitnessGoal ?? this.fitnessGoal,
           workoutPreferences: workoutPreferences ?? this.workoutPreferences,
+          workoutDuration: workoutDuration ?? this.workoutDuration,
+          gender: gender ?? this.gender,
           availableTime: availableTime ?? this.availableTime);
 
   factory RegisterRequestEntity.fromJson(Map<String, dynamic> json) => RegisterRequestEntity(
@@ -81,6 +96,9 @@ class RegisterRequestEntity {
       fitnessGoal: json["fitness_goal"],
       height: json['height'],
       weight: json['weight'],
+      specialCondition: json['special_condition'],
+      workoutDuration: json['workout_duration'],
+      gender: json['gender'],
       workoutPreferences: List<String>.from(json['workout_preferences'].map((x) => x)));
 
   Map<String, dynamic> toJson() => {
@@ -95,6 +113,9 @@ class RegisterRequestEntity {
         "fitness_goal": fitnessGoal,
         "heigt": height,
         "weight": weight,
+        "special_condition": specialCondition,
+        "workout_duration": workoutDuration,
+        "gender": gender,
         "workout_preferences": List<dynamic>.from(workoutPreferences.map((x) => x))
       };
 }

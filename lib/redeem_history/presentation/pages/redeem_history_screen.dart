@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/detail_member_bloc/detail_member_bloc.dart';
-import 'package:gym_guardian_membership/detail_attendance_history/presentation/bloc/fetch_activity_member_bloc/fetch_activity_member_bloc.dart';
 import 'package:gym_guardian_membership/pricing_plan/presentation/pages/pricing_plan_screen.dart';
 import 'package:gym_guardian_membership/redeem_history/domain/entities/redeem_history_entity.dart';
-import 'package:gym_guardian_membership/redeem_history/presentation/bloc/cancel_redeem_item_bloc/cancel_redeem_item_bloc.dart';
 import 'package:gym_guardian_membership/redeem_history/presentation/bloc/fetch_all_redeem_history_bloc/fetch_all_redeem_history_bloc.dart';
 import 'package:gym_guardian_membership/utility/base_sliver_padding.dart';
 import 'package:gym_guardian_membership/utility/blurred_dialogue_widget.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
-import 'package:gym_guardian_membership/utility/custom_toast.dart';
 import 'package:gym_guardian_membership/utility/empty_state_widget.dart';
 import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';

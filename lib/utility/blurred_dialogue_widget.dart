@@ -51,20 +51,22 @@ class BlurContainerWrapper extends StatelessWidget {
           topRight: Radius.circular(40),
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          16.verticalSpacingRadius,
-          Center(
-            child: Container(
-              width: 0.08.sw,
-              height: 4,
-              decoration:
-                  BoxDecoration(color: Colors.black87, borderRadius: BorderRadius.circular(100)),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            16.verticalSpacingRadius,
+            Center(
+              child: Container(
+                width: 0.08.sw,
+                height: 4,
+                decoration:
+                    BoxDecoration(color: Colors.black87, borderRadius: BorderRadius.circular(100)),
+              ),
             ),
-          ),
-          child
-        ],
+            child
+          ],
+        ),
       ),
     );
   }

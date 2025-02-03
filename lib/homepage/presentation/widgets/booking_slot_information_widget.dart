@@ -127,7 +127,7 @@ class _BookingSlotInformationWidgetState extends State<BookingSlotInformationWid
                 ),
               ),
               Expanded(
-                child: Image.asset("assets/home_illustration_1.png"),
+                child: Image.asset("assets/gym_building.png"),
               ),
             ],
           ),

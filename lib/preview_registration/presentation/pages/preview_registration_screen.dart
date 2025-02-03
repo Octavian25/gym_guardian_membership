@@ -46,30 +46,13 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
           height: previewState.previewRegistrationEntity.height,
           availableTime: previewState.previewRegistrationEntity.workoutAt,
           fitnessGoal: previewState.previewRegistrationEntity.goal,
+          workoutDuration: previewState.previewRegistrationEntity.workoutDuration,
+          gender: previewState.previewRegistrationEntity.gender,
+          specialCondition:
+              "${previewState.previewRegistrationEntity.specialCondition} - ${previewState.previewRegistrationEntity.condition}",
           workoutPreferences: [previewState.previewRegistrationEntity.workoutPreference]);
       context.read<RegisterMemberBloc>().add(DoRegisterMember(registerRequestEntity));
     }
-  }
-
-  void handleGenerateWorkoutSuggestions(PreviewRegistrationEntity data) async {
-    context.read<WorkoutSuggestionsBloc>().add(DoWorkoutSuggestions(data, null));
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return WorkoutSuggestionResultWidget(
-            data: data,
-            handleReCreate: (customPromp) async {
-              SharedPreferences preferences = await SharedPreferences.getInstance();
-              preferences.remove("lastGeneratedResult");
-              if (!context.mounted) return;
-              context.read<WorkoutSuggestionsBloc>().add(DoWorkoutSuggestions(data, customPromp));
-            });
-      },
-    );
   }
 
   @override
@@ -224,14 +207,6 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                                 )
                               ],
                             ),
-                            Center(
-                              child: OutlinedButton.icon(
-                                  icon: Icon(Icons.polyline_rounded),
-                                  onPressed: () {
-                                    handleGenerateWorkoutSuggestions(data);
-                                  },
-                                  label: Text("Generate Workout Suggestions")),
-                            ),
                             Divider(),
                             Text(
                               "Paket Dipilih",
@@ -370,10 +345,11 @@ class WorkoutSuggestionResultWidget extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  weeklyPlan.workout.aktivitas
+                                  weeklyPlan.workout.activity
                                       .fold<int>(
                                         0,
-                                        (previousValue, element) => previousValue + element.waktu,
+                                        (previousValue, element) =>
+                                            previousValue + element.duration,
                                       )
                                       .toString(),
                                   style: bebasNeue.copyWith(fontSize: 20.spMin),
@@ -386,13 +362,13 @@ class WorkoutSuggestionResultWidget extends StatelessWidget {
                             ),
                             title: Text(
                               weeklyPlan.day,
-                              style: bebasNeue.copyWith(fontSize: 25.spMin),
+                              style: bebasNeue.copyWith(fontSize: 23.spMin),
                             ),
                             subtitle: Text(
                               "Sentuh Untuk Melihat Detail Rencana",
                               style: TextStyle(fontSize: 11.spMin, color: Colors.black38),
                             ),
-                            children: weeklyPlan.workout.aktivitas.map((e) {
+                            children: weeklyPlan.workout.activity.map((e) {
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 leading: Icon(
@@ -400,14 +376,14 @@ class WorkoutSuggestionResultWidget extends StatelessWidget {
                                   color: Colors.grey,
                                 ),
                                 title: Text(
-                                  e.nama,
+                                  e.name,
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Text(
-                                  e.deskripsi,
+                                  e.description,
                                   style: TextStyle(fontSize: 11.spMin),
                                 ),
-                                trailing: Text(e.waktu.toString()),
+                                trailing: Text(e.duration.toString()),
                               );
                             }).toList(),
                           ),
@@ -433,41 +409,48 @@ class WorkoutSuggestionResultWidget extends StatelessWidget {
                           await showDialog(
                             context: context,
                             builder: (context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.white,
-                                title: Text("Ingin Lebih Personal ?"),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                        "Jika kamu ingin jadwal lebih personal seperti saya ingin hari libur pada senin dan selasa, atau perintah yang lainnya, silahkan tuliskan pada kolom dibawah"),
-                                    TextFormField(
-                                      controller: controller,
-                                      decoration:
-                                          InputDecoration(labelText: "Masukan Perintah Anda"),
+                              return GestureDetector(
+                                onTap: () {
+                                  FocusManager.instance.primaryFocus!.unfocus();
+                                },
+                                child: AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  title: Text("Ingin Lebih Personal ?"),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                          "Buat Perintah Sesuai Keiinganmu, Contohnya : Saya ingin libur pada hari senin dan rabu"),
+                                      TextFormField(
+                                        controller: controller,
+                                        minLines: 1,
+                                        maxLines: 5,
+                                        decoration:
+                                            InputDecoration(labelText: "Masukan Perintah Anda"),
+                                      )
+                                    ],
+                                  ),
+                                  actions: [
+                                    PrimaryButton(
+                                      title: "Buat Rekomendasi",
+                                      onPressed: () {
+                                        context.pop();
+                                        handleReCreate(controller.text);
+                                      },
+                                    ),
+                                    SizedBox(
+                                      width: 1.sw,
+                                      child: TextButton(
+                                          onPressed: () {
+                                            context.pop();
+                                          },
+                                          child: Text("Batal")),
                                     )
                                   ],
                                 ),
-                                actions: [
-                                  PrimaryButton(
-                                    title: "Buat Rekomendasi",
-                                    onPressed: () {
-                                      context.pop();
-                                    },
-                                  ),
-                                  SizedBox(
-                                    width: 1.sw,
-                                    child: TextButton(
-                                        onPressed: () {
-                                          context.pop();
-                                        },
-                                        child: Text("Batal")),
-                                  )
-                                ],
                               );
                             },
                           );
-                          handleReCreate(controller.text);
                         },
                       ),
                     ),
@@ -518,7 +501,14 @@ class WorkoutSuggestionResultWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 12.spMin),
                     ),
                   ),
-                  20.verticalSpacingRadius,
+                  10.verticalSpacingRadius,
+                  PrimaryButton(
+                    title: "Batal",
+                    onPressed: () {
+                      context.read<WorkoutSuggestionsBloc>().add(DoCancelWorkoutSuggestions());
+                    },
+                  ),
+                  10.verticalSpacingRadius,
                 ],
               );
             }

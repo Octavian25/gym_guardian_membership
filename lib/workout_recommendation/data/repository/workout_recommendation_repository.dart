@@ -1,0 +1,8 @@
+import '../datasource/workout_recommendation_local_datasource.dart';
+import '../datasource/workout_recommendation_remote_datasource.dart';
+import '../../domain/repository/repository.dart';
+class WorkoutRecommendationRepositoryImpl implements WorkoutRecommendationRepository {
+WorkoutRecommendationLocalDataSource workoutRecommendationLocalDataSource;
+WorkoutRecommendationRemoteDataSource workoutRecommendationRemoteDataSource;
+WorkoutRecommendationRepositoryImpl(this.workoutRecommendationLocalDataSource, this.workoutRecommendationRemoteDataSource);
+}

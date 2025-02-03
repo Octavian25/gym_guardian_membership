@@ -1,8 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:gym_guardian_membership/homepage/data/models/workout_recommendation_model.dart';
 import 'package:gym_guardian_membership/preview_registration/domain/entities/preview_registration_model.dart';
 import 'package:gym_guardian_membership/utility/gemini_helper.dart';
-import 'package:gym_guardian_membership/utility/global_loader.dart';
 import 'package:meta/meta.dart';
 import 'package:os_basecode/os_basecode.dart';
 
@@ -20,8 +18,8 @@ class WorkoutSuggestionsBloc extends Bloc<WorkoutSuggestionsEvent, WorkoutSugges
           data.gender,
           data.activityLevel,
           data.goal,
-          data.workoutDuration.toInt() ?? 0,
-          'Treadmill, Stationary Bike, Dumbbells, Pull-Up Bar,Yoga Mat,Punching Bag',
+          data.workoutDuration,
+          event.gymEquipments,
           data.workoutPreference,
           data.workoutAt,
           data.specialCondition,
@@ -31,6 +29,11 @@ class WorkoutSuggestionsBloc extends Bloc<WorkoutSuggestionsEvent, WorkoutSugges
       } else {
         emit(WorkoutSuggestionsSuccess(result, data));
       }
+    });
+
+    on<DoCancelWorkoutSuggestions>((event, emit) async {
+      emit(WorkoutSuggestionsLoading());
+      emit(WorkoutSuggestionsInitial());
     });
   }
 }

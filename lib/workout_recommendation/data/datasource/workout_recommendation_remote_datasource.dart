@@ -1,0 +1,2 @@
+abstract class WorkoutRecommendationRemoteDataSource {}
+class WorkoutRecommendationRemoteDataSourceImpl implements WorkoutRecommendationRemoteDataSource {}

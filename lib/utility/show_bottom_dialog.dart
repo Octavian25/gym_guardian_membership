@@ -12,17 +12,18 @@ Future<void> showBottomDialogueAlert(
     required String title,
     required String subtitle,
     required int duration,
+    Function()? onTimerComplete,
     BuildContext? buildContext}) async {
   return showBlurredBottomSheet(
     context: buildContext ?? parentKey.currentContext!,
     builder: (context) {
       return BlurContainerWrapper(
         child: ShowBottomDialogueAlert(
-          imagePath: imagePath,
-          title: title,
-          subtitle: subtitle,
-          duration: duration,
-        ),
+            imagePath: imagePath,
+            title: title,
+            subtitle: subtitle,
+            duration: duration,
+            onTimerComplete: onTimerComplete),
       );
     },
   );
@@ -33,11 +34,13 @@ class ShowBottomDialogueAlert extends StatefulWidget {
   final String title;
   final String subtitle;
   final int duration;
+  final Function()? onTimerComplete;
   const ShowBottomDialogueAlert(
       {super.key,
       required this.imagePath,
       required this.title,
       required this.subtitle,
+      this.onTimerComplete,
       required this.duration});
 
   @override
@@ -59,6 +62,9 @@ class _ShowBottomDialogueAlertState extends State<ShowBottomDialogueAlert>
             if (countdown == 1) {
               timer.cancel();
               context.pop();
+              if (widget.onTimerComplete != null) {
+                widget.onTimerComplete!();
+              }
             }
             setState(() {
               countdown--;

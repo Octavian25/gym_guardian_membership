@@ -2,14 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:gym_guardian_membership/homepage/data/models/workout_recommendation_model.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/detail_member_bloc/detail_member_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_activity_member_bloc/fetch_last_three_activity_member_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_booking_bloc/fetch_last_three_booking_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/widgets/attendance_button_widget.dart';
 import 'package:gym_guardian_membership/homepage/presentation/widgets/last_three_attendance_widget.dart';
 import 'package:gym_guardian_membership/homepage/presentation/widgets/widgets.dart';
-import 'package:gym_guardian_membership/login/presentation/widgets/primary_button.dart';
 import 'package:gym_guardian_membership/utility/base_sliver_padding.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';

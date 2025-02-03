@@ -1,0 +1,2 @@
+abstract class BodyMeasurementTrackerRemoteDataSource {}
+class BodyMeasurementTrackerRemoteDataSourceImpl implements BodyMeasurementTrackerRemoteDataSource {}

@@ -1,5 +1,7 @@
+
 import 'package:gym_guardian_membership/homepage/data/models/activity_member_model.dart';
 import 'package:gym_guardian_membership/homepage/data/models/booking_model.dart';
+import 'package:gym_guardian_membership/homepage/data/models/gym_equipment_model.dart';
 import 'package:gym_guardian_membership/homepage/data/models/register_attendance_response_model.dart';
 import 'package:gym_guardian_membership/register/data/models/member_model.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
@@ -7,6 +9,7 @@ import 'package:os_basecode/os_basecode.dart';
 
 abstract class HomepageRemoteDataSource {
   Future<MemberModel> fetchDetailMemberByEmail(String memberEmail);
+  Future<List<GymEquipmentModel>> fetchAllGymEquipment(String? category);
   Future<ActivityMemberModel> fetchActivityMemberByCode(String memberCode, int? page, int? limit);
   Future<int> checkBookingSlotLeft();
   Future<String> requestBooking(String memberCode, String bookingDate);
@@ -24,7 +27,6 @@ class HomepageRemoteDataSourceImpl implements HomepageRemoteDataSource {
     try {
       var result =
           await dio.get(checkMemberByEmailAPI, queryParameters: {"member_email": memberEmail});
-
       return MemberModel.fromJson(result.data);
     } on DioException catch (e) {
       throw DatabaseException(e.response?.data['message'] ??
@@ -134,6 +136,20 @@ class HomepageRemoteDataSourceImpl implements HomepageRemoteDataSource {
           e.response?.data ?? '[DSDERA] We Cant Communication with Server, Try again later');
     } catch (e) {
       throw CommonException('[DSCERA] We got some problems with our service, Try again later');
+    }
+  }
+
+  @override
+  Future<List<GymEquipmentModel>> fetchAllGymEquipment(String? category) async {
+    try {
+      var result = await dio.get(gymEquipmentAPI,
+          queryParameters: category != null ? {"category": category} : {});
+      return gymEquipmentModelFromJson(result.data);
+    } on DioException catch (e) {
+      throw DatabaseException(e.response?.data['message'] ??
+          '[DSDEFAGE] We Cant Communication with Server, Try again later');
+    } catch (e) {
+      throw CommonException('[DSCEFAGE] We got some problems with our service, Try again later');
     }
   }
 }

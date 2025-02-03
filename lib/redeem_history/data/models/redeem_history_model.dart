@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:gym_guardian_membership/detail_point/domain/entities/point_history_entity.dart';
 import 'package:gym_guardian_membership/homepage/data/models/activity_member_model.dart';
 import 'package:gym_guardian_membership/redeem_history/domain/entities/redeem_history_entity.dart';
 

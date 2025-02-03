@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_all_gym_equipment_bloc/fetch_all_gym_equipment_bloc.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 String getDateOnly(DateTime datetime) {
@@ -35,4 +36,20 @@ String formatDateWithTime(DateTime inputDate) {
 int randomNumber(int maxNumber, int minNumber) {
   final random = Random();
   return minNumber + random.nextInt(maxNumber - minNumber + 1);
+}
+
+String getCurrentDay({String? locale}) {
+  locale ??= Intl.getCurrentLocale(); // Gunakan locale default sistem jika tidak diberikan
+  return DateFormat('EEEE', locale).format(DateTime.now());
+}
+
+String getGymEquipment(BuildContext context) {
+  String gymEquipment = "";
+  var gymEquipmentState = context.read<FetchAllGymEquipmentBloc>().state;
+  if (gymEquipmentState is FetchAllGymEquipmentSuccess) {
+    gymEquipment = gymEquipmentState.datas.map((e) => e.toJsonGemini()).toList().join(",");
+  } else {
+    throw Exception('gyn Equipment not on success state');
+  }
+  return gymEquipment;
 }

@@ -5,6 +5,7 @@ import 'package:gym_guardian_membership/homepage/presentation/bloc/cancel_bookin
 import 'package:gym_guardian_membership/homepage/presentation/bloc/check_booking_slot_left_bloc/check_booking_slot_left_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/detail_member_bloc/detail_member_bloc.dart';
 import 'package:gym_guardian_membership/detail_attendance_history/presentation/bloc/fetch_activity_member_bloc/fetch_activity_member_bloc.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_all_gym_equipment_bloc/fetch_all_gym_equipment_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_booking_bloc/fetch_booking_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_activity_member_bloc/fetch_last_three_activity_member_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_booking_bloc/fetch_last_three_booking_bloc.dart';
@@ -21,18 +22,22 @@ import 'package:gym_guardian_membership/redeem_history/presentation/bloc/fetch_a
 import 'package:gym_guardian_membership/redeemable_item/presentation/bloc/fetch_all_redeemable_item_bloc/fetch_all_redeemable_item_bloc.dart';
 import 'package:gym_guardian_membership/redeemable_item/presentation/bloc/redeem_item_bloc/redeem_item_bloc.dart';
 import 'package:gym_guardian_membership/register/presentation/bloc/register_member_bloc/register_member_bloc.dart';
+import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/bloc/body_measurement_bloc/body_measurement_bloc.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/gemini_helper.dart';
 import 'package:gym_guardian_membership/utility/router.dart';
+import 'package:gym_guardian_membership/workout_recommendation/presentation/bloc/chat_history_bloc/chat_history_bloc.dart';
 import 'package:os_basecode/os_basecode.dart';
-// ignore: depend_on_referenced_packagesπ
+// ignore: depend_on_referenced_packages
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:os_updater/os_updater.dart';
+import 'package:y_player/y_player.dart';
 import 'injector.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Gemini.init(apiKey: geminiKey);
-
+  printAllGeminiModels();
   await di.initSharedPref();
   await di.locator.allReady();
   if (!di.locator.allReadySync()) {
@@ -43,6 +48,8 @@ void main() async {
       appsKey: "7YG6Uqz8E5p4TmcjFQspZv48140wDEfI", splittedAPK: true);
   // Inisialisasi locale berdasarkan sistem perangkat
   await initializeDateFormatting();
+  YPlayerInitializer.ensureInitialized();
+
   Intl.defaultLocale = WidgetsBinding.instance.platformDispatcher.locale.toString();
   runApp(const MyApp());
 }
@@ -113,10 +120,19 @@ class MyApp extends StatelessWidget {
           create: (context) => di.locator<CancelRedeemItemBloc>(),
         ),
         BlocProvider(
+          create: (context) => di.locator<ChatHistoryBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => di.locator<FetchAllGymEquipmentBloc>(),
+        ),
+        BlocProvider(
           create: (context) => PreviewRegistrationBloc(),
         ),
         BlocProvider(
           create: (context) => WorkoutSuggestionsBloc(),
+        ),
+        BlocProvider(
+          create: (context) => BodyMeasurementBloc(),
         ),
       ],
       child: ScreenUtilInit(
@@ -129,13 +145,23 @@ class MyApp extends StatelessWidget {
             routeInformationProvider: goRouter.routeInformationProvider,
             routeInformationParser: goRouter.routeInformationParser,
             routerDelegate: goRouter.routerDelegate,
-            title: 'Loyality Membership',
+            title: 'Gym Guardian Membership',
             theme: ThemeData(
                 appBarTheme: AppBarTheme(backgroundColor: Colors.white, shadowColor: Colors.white),
                 scaffoldBackgroundColor: Colors.white,
                 colorScheme: ColorScheme.fromSeed(
                     seedColor: "#B0C929".toColor(), primary: "#B0C929".toColor()),
                 useMaterial3: true,
+                navigationBarTheme:
+                    NavigationBarThemeData(labelTextStyle: WidgetStateTextStyle.resolveWith(
+                  (states) {
+                    if (states.contains(WidgetState.selected)) {
+                      return TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
+                    } else {
+                      return TextStyle(fontSize: 12);
+                    }
+                  },
+                )),
                 textButtonTheme: TextButtonThemeData(
                     style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))),

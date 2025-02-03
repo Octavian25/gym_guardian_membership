@@ -1,5 +1,6 @@
 import 'package:gym_guardian_membership/homepage/domain/entities/activity_member_entity.dart';
 import 'package:gym_guardian_membership/homepage/domain/entities/booking_entity.dart';
+import 'package:gym_guardian_membership/homepage/domain/entities/gym_equipment_entity.dart';
 import 'package:gym_guardian_membership/homepage/domain/entities/register_attendance_reponse_entity.dart';
 import 'package:gym_guardian_membership/register/domain/entities/member_entity.dart';
 import 'package:os_basecode/os_basecode.dart';
@@ -136,6 +137,21 @@ class HomepageRepositoryImpl implements HomepageRepository {
     } catch (e) {
       return const Left(
           CommonFailure('[RPCFRA] We got some problem with our service, please try again'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<GymEquipmentEntity>>> fetchAllGymEquipment(String? category) async {
+    try {
+      var response = await homepageRemoteDataSource.fetchAllGymEquipment(category);
+      return Right(response.map((e) => e.toEntity()).toList());
+    } on DatabaseException catch (e) {
+      return Left(DatabaseFailure(e.message));
+    } on CommonException catch (e) {
+      return Left(CommonFailure(e.message));
+    } catch (e) {
+      return const Left(
+          CommonFailure('[RPCFFAGE] We got some problem with our service, please try again'));
     }
   }
 }
