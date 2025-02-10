@@ -47,7 +47,7 @@ enum MotivationEnum { kesehatan, penampilan, kebiasaanHidupSehat, aktivitasSosia
 enum HighIntensityWorkoutEnum { tidakNyaman, nyaman, sangatNyaman }
 
 const geminiKey = 'AIzaSyC9BrMYUFeBhYrdAfdP7Gj-5buQv1BRE-g';
-const baseURL = "http://192.168.0.9:5555/";
+const baseURL = "http://192.168.0.21:5555/";
 // const baseURL = "https://103.150.191.156:44444/";
 String appVersion = "1.0.5";
 //SHAREDPREFERENCE KEY
@@ -60,12 +60,15 @@ const apiVersion = "v1";
 
 const loginAPI = "auth/member/login";
 const logoutAPI = "auth/logout";
+const systemsAPI = "$apiVersion/systems";
 const bookingsAPI = "$apiVersion/bookings";
 const pricingPlanAPI = "$apiVersion/packages";
 const memberAPI = "$apiVersion/members";
 const redeemableItemAPI = "$apiVersion/redeemable-items";
 const redeemHistoryAPI = "$apiVersion/redeem-histories";
 const gymEquipmentAPI = "$apiVersion/gym-equipments";
+const bodyMeasurementAPI = "$apiVersion/body-measurement-members";
+const eventScheduleAPI = "$apiVersion/event-schedules";
 const redeemHistoryByMemberAPI = "$redeemHistoryAPI/mobile";
 const redeemableItemPaginatedAPI = "$redeemableItemAPI/mobile";
 const memberAttendanceAPI = "$memberAPI/mobile/attendance";

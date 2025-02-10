@@ -46,7 +46,7 @@ class LoyalityInformationWidget extends StatelessWidget {
                               style: bebasNeue.copyWith(fontSize: 18.spMin),
                             ),
                             Text(
-                              "Poin",
+                              context.l10n.point,
                               style: TextStyle(fontSize: 12.spMin),
                             )
                           ],
@@ -126,7 +126,7 @@ class LoyalityInformationWidget extends StatelessWidget {
                               style: bebasNeue.copyWith(fontSize: 18.spMin),
                             ),
                             Text(
-                              "Level",
+                              context.l10n.level,
                               style: TextStyle(fontSize: 12.spMin),
                             )
                           ],
@@ -141,7 +141,7 @@ class LoyalityInformationWidget extends StatelessWidget {
             return ErrorBuilderWidget(
               errorMessage: state.message,
               handleReload: () {
-                context.read<DetailMemberBloc>().add(DoDetailMember());
+                context.read<DetailMemberBloc>().add(DoDetailMember(false));
               },
             );
           } else {

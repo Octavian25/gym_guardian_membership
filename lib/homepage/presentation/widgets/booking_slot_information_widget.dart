@@ -65,29 +65,33 @@ class _BookingSlotInformationWidgetState extends State<BookingSlotInformationWid
         child: Container(
           decoration: BoxDecoration(
             color: primaryColor,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
           ),
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
               Expanded(
+                flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Spacer(),
                     Text(
-                      "Total Slot Booking Tersisa Untuk Hari Ini",
-                      style: TextStyle(fontSize: 12.spMin),
+                      context.l10n.booking_info,
+                      style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.bold),
                     ),
+                    Spacer(),
                     Text(
                       "$availableSlots",
                       style: bebasNeue.copyWith(fontSize: 30.spMin),
                     ),
+                    Spacer(),
                     BlocBuilder<DetailMemberBloc, DetailMemberState>(
                       builder: (context, state) {
                         if (state is DetailMemberSuccess) {
                           return SizedBox(
-                            height: 20.h,
+                            height: 25.h,
                             child: FilledButton.icon(
                               style: FilledButton.styleFrom(
                                 backgroundColor: "#F5F5F5".toColor(),
@@ -96,9 +100,8 @@ class _BookingSlotInformationWidgetState extends State<BookingSlotInformationWid
                                 if (state.datas.onSite) {
                                   showBottomDialogueAlert(
                                       imagePath: "assets/sad.png",
-                                      title: "Tidak Bisa Booking",
-                                      subtitle:
-                                          "Anda sedang berada di lokasi. Check out dulu ya untuk Booking slot.",
+                                      title: context.l10n.booking_failed_title,
+                                      subtitle: context.l10n.booking_failed_subtitle,
                                       duration: 3);
                                   return;
                                 }
@@ -110,11 +113,12 @@ class _BookingSlotInformationWidgetState extends State<BookingSlotInformationWid
                                   },
                                 );
                               },
-                              icon: Icon(Icons.chevron_right_rounded, color: Colors.black),
-                              iconAlignment: IconAlignment.end,
                               label: Text(
-                                "Booking Now",
-                                style: TextStyle(fontSize: 13.spMin, color: Colors.black),
+                                context.l10n.reservation_now,
+                                style: TextStyle(
+                                    fontSize: 11.spMin,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           );
@@ -122,11 +126,13 @@ class _BookingSlotInformationWidgetState extends State<BookingSlotInformationWid
                           return SizedBox.shrink();
                         }
                       },
-                    )
+                    ),
+                    Spacer(),
                   ],
                 ),
               ),
               Expanded(
+                flex: 1,
                 child: Image.asset("assets/gym_building.png"),
               ),
             ],

@@ -1,10 +1,10 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:gym_guardian_membership/homepage/domain/usecase/fetch_detail_member_by_email.dart';
 import 'package:gym_guardian_membership/register/domain/entities/member_entity.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/global_loader.dart';
-import 'package:meta/meta.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 part 'detail_member_event.dart';
@@ -32,9 +32,18 @@ class DetailMemberBloc extends Bloc<DetailMemberEvent, DetailMemberState> {
       response.fold((l) {
         emit(DetailMemberFailure(l.message));
       }, (r) {
-        emit(DetailMemberSuccess(r));
+        emit(DetailMemberSuccess(r, event.initState));
       });
       GlobalLoader.hide();
     });
+  }
+}
+
+MemberEntity? getMemberEntityFromBloc(BuildContext context) {
+  var memberState = context.read<DetailMemberBloc>().state;
+  if (memberState is DetailMemberSuccess) {
+    return memberState.datas;
+  } else {
+    return null;
   }
 }

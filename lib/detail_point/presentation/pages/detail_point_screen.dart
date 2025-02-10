@@ -9,6 +9,7 @@ import 'package:gym_guardian_membership/pricing_plan/presentation/pages/pricing_
 import 'package:gym_guardian_membership/utility/base_sliver_padding.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/empty_state_widget.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:os_basecode/os_basecode.dart';
 
@@ -125,7 +126,7 @@ class _DetailPointScreenState extends State<DetailPointScreen> {
                 SliverToBoxAdapter(child: 10.verticalSpacingRadius),
                 SliverToBoxAdapter(
                     child: Center(
-                  child: Text("Poin:"),
+                  child: Text("${context.l10n.point}:"),
                 ).animate().slideY(begin: -0.3, end: 0)),
                 BlocBuilder<DetailMemberBloc, DetailMemberState>(
                   builder: (context, state) {
@@ -141,7 +142,7 @@ class _DetailPointScreenState extends State<DetailPointScreen> {
                       return ErrorBuilderWidget(
                         errorMessage: state.message,
                         handleReload: () {
-                          context.read<DetailMemberBloc>().add(DoDetailMember());
+                          context.read<DetailMemberBloc>().add(DoDetailMember(false));
                         },
                       );
                     } else {
@@ -164,7 +165,7 @@ class _DetailPointScreenState extends State<DetailPointScreen> {
                             color: Colors.grey.shade100, borderRadius: BorderRadius.circular(8)),
                         padding: EdgeInsets.all(8),
                         child: Text(
-                          "Tukar Poin",
+                          context.l10n.redeem_point,
                           style: TextStyle(fontSize: 12.spMin),
                         ),
                       ),
@@ -182,7 +183,7 @@ class _DetailPointScreenState extends State<DetailPointScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "Riwayat Poin",
+                            context.l10n.poin_history,
                             style: bebasNeue.copyWith(fontSize: 20.spMin),
                           ),
                         ],
@@ -218,9 +219,8 @@ class _DetailPointScreenState extends State<DetailPointScreen> {
                     ),
                     firstPageProgressIndicatorBuilder: (context) => CircularProgressIndicator(),
                     noItemsFoundIndicatorBuilder: (context) => EmptyStateWidget(
-                        title: "Riwayat Poin Kosong",
-                        subtitle:
-                            "Kumpulkan atau gunakan poin untuk melihat aktivitas Anda di sini."),
+                        title: context.l10n.detail_point_empty,
+                        subtitle: context.l10n.detail_point_empty_subtitle),
                   ),
                 )
               ],

@@ -23,6 +23,7 @@ import 'package:gym_guardian_membership/utility/show_bottom_dialog.dart';
 import 'package:os_basecode/os_basecode.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'loyality_information_widget.dart';
 part 'booking_slot_information_widget.dart';

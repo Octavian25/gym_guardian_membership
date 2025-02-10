@@ -24,13 +24,13 @@ class DetailAttendanceOutWidget extends StatelessWidget {
           ),
           Center(
             child: Text(
-              "Selamat!",
+              "${context.l10n.congrats}!",
               style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
             ),
           ),
           Center(
             child: Text(
-              "Teruslah berlatih untuk mencapai level berikutnya!",
+              "${context.l10n.checkout_message}!",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 11.spMin),
             ),
@@ -42,7 +42,7 @@ class DetailAttendanceOutWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Check Out",
+                  context.l10n.check_out,
                   style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.w300),
                 ),
                 5.verticalSpacingRadius,
@@ -61,7 +61,7 @@ class DetailAttendanceOutWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Poin yang Didapatkan",
+                  context.l10n.point_earned,
                   style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.w300),
                 ),
                 5.verticalSpacingRadius,

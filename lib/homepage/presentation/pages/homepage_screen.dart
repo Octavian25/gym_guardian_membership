@@ -1,15 +1,20 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:gym_guardian_membership/body_measurement_tracker/presentation/bloc/fetch_body_measurement_bloc/fetch_body_measurement_bloc.dart';
+import 'package:gym_guardian_membership/gym_schedule/presentation/bloc/fetch_event_schedule_bloc/fetch_event_schedule_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/detail_member_bloc/detail_member_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_activity_member_bloc/fetch_last_three_activity_member_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_last_three_booking_bloc/fetch_last_three_booking_bloc.dart';
+import 'package:gym_guardian_membership/homepage/presentation/bloc/register_attendance_bloc/register_attendance_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/widgets/attendance_button_widget.dart';
 import 'package:gym_guardian_membership/homepage/presentation/widgets/last_three_attendance_widget.dart';
+import 'package:gym_guardian_membership/homepage/presentation/widgets/nearest_event_widget.dart';
 import 'package:gym_guardian_membership/homepage/presentation/widgets/widgets.dart';
 import 'package:gym_guardian_membership/utility/base_sliver_padding.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/geolocator_helper.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';
 import 'package:os_basecode/os_basecode.dart';
 import 'package:os_updater/os_updater.dart';
@@ -29,7 +34,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
   void initState() {
     super.initState();
     if (widget.extra != null && widget.extra == "fetch") {
-      context.read<DetailMemberBloc>().add(DoDetailMember());
+      context.read<DetailMemberBloc>().add(DoDetailMember(true));
     }
     scrollController.addListener(
       () {
@@ -53,6 +58,8 @@ class _HomepageScreenState extends State<HomepageScreen> {
     );
   }
 
+  GlobalKey<AttendanceButtonWidgetState> attendanceKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,15 +72,67 @@ class _HomepageScreenState extends State<HomepageScreen> {
             context
                 .read<FetchLastThreeActivityMemberBloc>()
                 .add(DoFetchLastThreeActivityMember(state.datas.memberCode, 1, 3));
+            context
+                .read<FetchEventScheduleBloc>()
+                .add(DoFetchEventSchedule(state.datas.memberCode));
+            context.read<FetchBodyMeasurementBloc>().add(DoFetchBodyMeasurement(
+                  state.datas.memberCode,
+                ));
+            if (await checkIsOnLocation()) {
+              if (state.initState) {
+                if (!state.datas.onSite) {
+                  if (!context.mounted) return;
+                  await showBottomConfirmationDialogueAlert(
+                      imagePath: "assets/gym_building.png",
+                      title: "${context.l10n.you_already_in} Kantor Nagatech Cilengkrang",
+                      subtitle:
+                          "Hay ${state.datas.memberName}, ${context.l10n.auto_check_in_message}",
+                      handleConfirm: (context) {
+                        context.pop();
+                        var memberEntity = getMemberEntityFromBloc(context);
+                        if (memberEntity != null) {
+                          attendanceKey.currentState!
+                              .startAttendanceProcedure(memberEntity.onSite, false, "YES");
+                        }
+                      },
+                      showSecondaryButton: true,
+                      secondaryButtonText: context.l10n.auto_check_in_negative,
+                      handleCancel: (context) {
+                        context.pop();
+                      },
+                      buttonText: context.l10n.auto_check_in_positive);
+                }
+              }
+            } else {
+              if (state.datas.onSite) {
+                if (state.initState) {
+                  if (!context.mounted) return;
+                  await showBottomConfirmationDialogueAlert(
+                    imagePath: "assets/gym_building.png",
+                    title: "${context.l10n.you_already_out} Kantor Nagatech Cilengkrang",
+                    subtitle:
+                        "Hay ${state.datas.memberName}, ${context.l10n.auto_check_out_message}",
+                    handleConfirm: (context) {
+                      var memberState = context.read<DetailMemberBloc>().state;
+                      if (memberState is DetailMemberSuccess) {
+                        context
+                            .read<RegisterAttendanceBloc>()
+                            .add(DoRegisterAttendance(memberState.datas.memberCode, "NO"));
+                      }
+                    },
+                  );
+                }
+              }
+            }
           } else if (state is DetailMemberFailure) {
             await showBottomConfirmationDialogueAlert(
               imagePath: "assets/sad.png",
-              title: "Gagal Mengambil Detail Member", // Translated title
-              subtitle:
-                  "Terjadi masalah saat mengambil data member. Silakan periksa koneksi internet Anda dan coba lagi.", // Translated subtitle.  More natural phrasing.
+              title: context.l10n.failed_fetch_member_title, // Translated title
+              subtitle: context.l10n
+                  .failed_fetch_member_subtitle, // Translated subtitle.  More natural phrasing.
               handleConfirm: (context) {
                 context.pop();
-                context.read<DetailMemberBloc>().add(DoDetailMember());
+                context.read<DetailMemberBloc>().add(DoDetailMember(false));
               },
             );
           }
@@ -90,43 +149,13 @@ class _HomepageScreenState extends State<HomepageScreen> {
               ),
               CustomScrollView(
                 controller: scrollController,
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 slivers: [
                   AppBarHomepage(scrollNotifier: scrollNotifier),
                   SliverToBoxAdapter(
                     child: 10.verticalSpacingRadius,
                   ),
-                  if (state is DetailMemberSuccess && !state.datas.status)
-                    baseSliverPadding(
-                      sliver: SliverToBoxAdapter(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            children: [
-                              Image.asset(
-                                "assets/points.png",
-                                width: 60.h,
-                                height: 60.h,
-                              ),
-                              Text("Akun Anda Belum Aktif", // More natural phrasing
-                                  style: bebasNeue.copyWith(
-                                      fontSize: 20.spMin,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
-                              Text(
-                                  "Silakan hubungi admin untuk aktivasi akun dan jangan lupa untuk membayar biaya berlangganan.", // Improved phrasing and wording
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 12.spMin,
-                                  )),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                  if (state is DetailMemberSuccess && !state.datas.status) activationMemberText(),
                   if (state is DetailMemberSuccess && state.datas.status)
                     baseSliverPadding(
                       sliver: LoyalityInformationWidget(),
@@ -134,7 +163,10 @@ class _HomepageScreenState extends State<HomepageScreen> {
                   if (state is DetailMemberSuccess && state.datas.status)
                     SliverToBoxAdapter(child: 10.verticalSpacingRadius),
                   if (state is DetailMemberSuccess && state.datas.status)
-                    baseSliverPadding(sliver: AttendanceButtonWidget()),
+                    baseSliverPadding(
+                        sliver: AttendanceButtonWidget(
+                      key: attendanceKey,
+                    )),
                   if (state is DetailMemberSuccess && state.datas.status)
                     SliverToBoxAdapter(child: 10.verticalSpacingRadius),
                   if (state is DetailMemberSuccess && state.datas.status)
@@ -150,7 +182,28 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "Riwayat Booking Terbaru",
+                              context.l10n.nearest_event,
+                              style: bebasNeue.copyWith(fontSize: 20.spMin),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+                  SliverToBoxAdapter(child: 10.verticalSpacingRadius),
+                  NearestEventScheduleWidget(),
+                  SliverToBoxAdapter(child: 10.verticalSpacingRadius),
+                  baseSliverPadding(
+                      sliver: SliverToBoxAdapter(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              context.l10n.booking_history,
                               style: bebasNeue.copyWith(fontSize: 20.spMin),
                             ),
                           ],
@@ -171,11 +224,11 @@ class _HomepageScreenState extends State<HomepageScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "Riwayat Kehadiran",
+                              context.l10n.attendance_history,
                               style: bebasNeue.copyWith(fontSize: 20.spMin),
                             ),
                             Text(
-                              "Kita hanya menampilkan 3 riwayat terakhir",
+                              context.l10n.attendance_history_subtitle,
                               style: TextStyle(fontSize: 11.spMin),
                             ),
                           ],
@@ -210,7 +263,7 @@ class _HomepageScreenState extends State<HomepageScreen> {
                                         borderRadius: BorderRadius.circular(10)),
                                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                     child: Text(
-                                      "Lihat Semua Riwayat Kehadiran",
+                                      context.l10n.attendance_history_show_all,
                                       style: TextStyle(fontSize: 10.spMin),
                                     ),
                                   ),
@@ -232,6 +285,39 @@ class _HomepageScreenState extends State<HomepageScreen> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  SliverPadding activationMemberText() {
+    return baseSliverPadding(
+      sliver: SliverToBoxAdapter(
+        child: Container(
+          decoration: BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              5.verticalSpacingRadius,
+              Image.asset(
+                "assets/history2.png",
+                width: 60.h,
+                height: 60.h,
+              ),
+              10.verticalSpacingRadius,
+              Text(context.l10n.your_account_not_active_title, // More natural phrasing
+                  style: bebasNeue.copyWith(
+                      fontSize: 20.spMin, color: Colors.white, fontWeight: FontWeight.bold)),
+              5.verticalSpacingRadius,
+              Text(context.l10n.your_account_not_active_subtitle, // Improved phrasing and wording
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12.spMin, color: onPrimaryColor)),
+              5.verticalSpacingRadius,
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:gym_guardian_membership/login/presentation/widgets/primary_butto
 import 'package:gym_guardian_membership/register_body_measurement_tracker/domain/entities/body_measurement_entity.dart';
 import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/bloc/body_measurement_bloc/body_measurement_bloc.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/utility/ruler_picker_widget.dart';
 import 'package:os_basecode/os_basecode.dart';
 
@@ -42,7 +43,7 @@ class _HeightRegisterBodymeasurementState extends State<HeightRegisterBodymeasur
             SizedBox(
               width: 0.7.sw,
               child: Text(
-                "Berapa Tinggi Badan kamu saat ini?",
+                context.l10n.hows_your_height,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20.spMin, fontWeight: FontWeight.bold),
               ),
@@ -115,7 +116,7 @@ class _HeightRegisterBodymeasurementState extends State<HeightRegisterBodymeasur
             ),
             20.verticalSpacingRadius,
             PrimaryButton(
-              title: "Selanjutnya",
+              title: context.l10n.next,
               onPressed: () {
                 var currentState = context.read<BodyMeasurementBloc>().state;
                 if (currentState is BodyMeasurementSuccess) {
@@ -127,7 +128,7 @@ class _HeightRegisterBodymeasurementState extends State<HeightRegisterBodymeasur
                       .add(DoBodyMeasurement(BodyMeasurementEntity(height: heightNotifier.value)));
                 }
 
-                context.go("/body-metrics/register-body-measurements-tracker/weight");
+                context.go("/register-body-measurements-tracker/weight");
               },
             )
           ],

@@ -4,14 +4,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:gym_guardian_membership/homepage/data/models/workout_recommendation_model.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/workout_recommendation/presentation/bloc/chat_history_bloc/chat_history_bloc.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 Future<void> printAllGeminiModels() async {
-  var models = await Gemini.instance.listModels();
-  for (var model in models) {
-    log("Model Name : ${model.name},", name: "GEMINI");
-  }
+  await Gemini.instance.listModels();
 }
 
 Future<bool> removePreviousResult() async {
@@ -128,15 +126,17 @@ Future<WorkoutRecommendationModel?> getRecommendation(
 
     log("Generating Gemini Response", name: "GEMINI");
     log(basePrompt, name: "GEMINI");
-    final response =
-        await Gemini.instance.prompt(parts: [Part.text(basePrompt)], model: 'gemini-2.0-flash-exp');
+    final response = await Gemini.instance
+        .prompt(parts: [Part.text(basePrompt)], model: 'gemini-2.0-flash-thinking-exp-01-21');
     log("Generating Finish", name: "GEMINI");
     if (response?.output == null) return null;
 
     final newResult = response!.output!;
     await sharedPreferences.setString("lastGeneratedResult", newResult);
-
-    return workoutRecommendationModelFromJson(extractJson(newResult));
+    Map<String, String> extractedData = extractJson(newResult);
+    String jsonString =
+        extractedData["jsonString"]!; // Gunakan ! karena kita sudah mengecek keberadaannya
+    return workoutRecommendationModelFromJson(jsonString);
   } catch (e, s) {
     throw Exception(s.toString());
   }
@@ -154,6 +154,7 @@ Future<void> getOneWorkoutRecommendation(
     String availability,
     String specialConditions,
     String? customPromp,
+    String? lastWeekBodyMeasurementResult,
     BuildContext context) async {
   try {
     // **Mendeteksi Locale dari Perangkat**
@@ -175,6 +176,9 @@ Future<void> getOneWorkoutRecommendation(
     - Waktu Tersedia: $availability
     - Kondisi Khusus: $specialConditions
 
+    **Catatan Body Measurement**
+    $lastWeekBodyMeasurementResult
+
     **Instruksi:**
     1. Berikan **1 rekomendasi olahraga** yang paling sesuai dengan profil saya.
     2. Jelaskan alat apa yang digunakan.
@@ -186,6 +190,11 @@ Future<void> getOneWorkoutRecommendation(
     8. Ambil link video dari object Peralatan Tersedia dengan key tutorial_video
     9. Masukan tutorial_video ke tutorial_youtube_url
     10. Untuk reps_per_set gunakan angka pasti, misalkan 3 atau 5
+    11. Saya melampirkan catatan body measurement saya
+    12. Jadikan Catatan Body Measurement saya sebagai pertimbangan olahraga apa yang paling sesuai untuk saya
+
+
+ 
 
     2. **Terjemahkan hasil latihan ke bahasa yang sesuai dengan locale pengguna**
     - Kode bahasa pengguna: $language
@@ -215,8 +224,9 @@ Future<void> getOneWorkoutRecommendation(
     if (customPromp != null) {
       await addNewChat(customPromp, customPromp, "user");
     } else {
-      await addNewChat(basePrompt, "Buatkan Rekomendasi Workout", "user");
+      await addNewChat(basePrompt, context.l10n.workout_recommendation, "user");
     }
+    if (!context.mounted) return;
     context.read<ChatHistoryBloc>().add(DoLoadChatHistory());
     // Load dan batasi chat history yang dikirim ke AI (misalnya 10 terakhir)
     List<ChatHistoryModel> chatHistory = await loadChatHistory();
@@ -225,7 +235,9 @@ Future<void> getOneWorkoutRecommendation(
         .map((e) => Content(parts: [Part.text(e.prompt)], role: e.role))
         .toList();
     log("Generating Response", name: "GEMINI");
-    final response = await Gemini.instance.chat(chatContents, modelName: 'gemini-2.0-flash-exp');
+    log(basePrompt, name: "GEMINI");
+    final response =
+        await Gemini.instance.chat(chatContents, modelName: 'gemini-2.0-flash-thinking-exp-01-21');
     log("Generating Finish", name: "GEMINI");
     if (response?.output == null) return;
 
@@ -255,6 +267,7 @@ Future<void> getChallengeWorkout(
     String availability,
     String specialConditions,
     String? customPromp,
+    String? lastWeekBodyMeasurementResult,
     BuildContext context) async {
   try {
     // **Mendeteksi Locale dari Perangkat**
@@ -288,6 +301,9 @@ Future<void> getChallengeWorkout(
     9. Masukan tutorial_video ke tutorial_youtube_url
     10. Untuk reps_per_set gunakan angka pasti, misalkan 3 atau 5
 
+    **Catatan Body Measurement**
+    $lastWeekBodyMeasurementResult
+    
     2. **Terjemahkan hasil latihan ke bahasa yang sesuai dengan locale pengguna**
     - Kode bahasa pengguna: $language
     - Gunakan bahasa yang sesuai, misalnya Bahasa Indonesia untuk 'id', English untuk 'en', dll.
@@ -314,10 +330,30 @@ Future<void> getChallengeWorkout(
     }
     ''';
     if (customPromp != null) {
-      await addNewChat(customPromp, customPromp, "user");
-    } else {
-      await addNewChat(basePrompt, "Buatkan Tantangan Workout", "user");
+      await addNewChat('''
+$customPromp
+
+Untuk reps_per_set gunakan angka pasti, misalkan 3 atau 5
+**Format jawaban Harus dalam JSON (tetap dalam bahasa Inggris untuk key-nya, tetapi nilai dalam locale pengguna):**
+    {
+      "exercise_name": "string",
+      "equipment": "string",
+      "duration": "number (menit)",
+      "sets": "number",
+      "reps_per_set": "number",
+      "rest_between_reps": "number (detik)",
+      "rest_between_sets": "number (detik)",
+      "benefits": "string",
+      "how_to_do": "string",
+      "tutorial_youtube_url": "string",
     }
+
+    Langsung jawab dengan format JSON yang diberikan
+''', customPromp, "user");
+    } else {
+      await addNewChat(basePrompt, context.l10n.workout_challenge, "user");
+    }
+    if (!context.mounted) return;
     context.read<ChatHistoryBloc>().add(DoLoadChatHistory());
     // Load dan batasi chat history yang dikirim ke AI (misalnya 10 terakhir)
     List<ChatHistoryModel> chatHistory = await loadChatHistory();
@@ -326,7 +362,8 @@ Future<void> getChallengeWorkout(
         .map((e) => Content(parts: [Part.text(e.prompt)], role: e.role))
         .toList();
     log("Generating Response", name: "GEMINI");
-    final response = await Gemini.instance.chat(chatContents, modelName: 'gemini-2.0-flash-exp');
+    final response =
+        await Gemini.instance.chat(chatContents, modelName: 'gemini-2.0-flash-thinking-exp-01-21');
     log("Generating Finish", name: "GEMINI");
     if (response?.output == null) return;
 
@@ -350,7 +387,7 @@ Future<void> saveChatHistory(List<ChatHistoryModel> chatHistory) async {
     String jsonString = jsonEncode(chatHistory.map((e) => e.toJson()).toList());
     await prefs.setString('chat_history', jsonString);
   } catch (e) {
-    print("Error saving chat history: $e");
+    debugPrint("Error saving chat history: $e");
   }
 }
 
@@ -364,7 +401,7 @@ Future<List<ChatHistoryModel>> loadChatHistory() async {
       return jsonData.map((e) => ChatHistoryModel.fromJson(e)).toList();
     }
   } catch (e) {
-    print("Error loading chat history: $e");
+    debugPrint("Error loading chat history: $e");
   }
   return [];
 }
@@ -389,7 +426,7 @@ Future<void> addNewChat(
     // Simpan ke SharedPreferences
     await saveChatHistory(chatHistory);
   } catch (e) {
-    print("Error saving chat history: $e");
+    debugPrint("Error saving chat history: $e");
   }
 }
 
@@ -420,6 +457,37 @@ Future<void> clearChatHistory(BuildContext context) async {
   context.read<ChatHistoryBloc>().add(DoLoadChatHistory());
 }
 
-String extractJson(String input) {
-  return input.replaceAll("```", "").replaceAll("json", "");
+Map<String, String> extractJson(String input) {
+  int startIndex = input.indexOf("```json");
+  int endIndex = input.lastIndexOf("```");
+
+  String beforeJson = "";
+  String jsonString = "";
+  String afterJson = "";
+
+  if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
+    beforeJson = input.substring(0, startIndex).trim();
+    jsonString = input.substring(startIndex + 7, endIndex).trim();
+    afterJson = input.substring(endIndex + 3).trim();
+  } else if (startIndex != -1 && endIndex == -1) {
+    // Hanya ada ```json tapi tidak ada ``` penutup
+    beforeJson = input.substring(0, startIndex).trim();
+    jsonString = input.substring(startIndex + 7).trim(); // Ambil sampai akhir string
+  } else if (startIndex == -1 && endIndex != -1) {
+    // Hanya ada ``` penutup tapi tidak ada ```json
+    jsonString = input.substring(0, endIndex).trim();
+    afterJson = input.substring(endIndex + 3).trim();
+  } else if (input.startsWith("```json") && input.endsWith("```")) {
+    // Hanya ada JSON
+    jsonString = input.substring(7, input.length - 3).trim();
+  } else {
+    // Tidak ada ```json atau ```, anggap seluruh input sebagai beforeJson
+    beforeJson = input.trim();
+  }
+
+  return {
+    "beforeJson": beforeJson,
+    "jsonString": jsonString,
+    "afterJson": afterJson,
+  };
 }

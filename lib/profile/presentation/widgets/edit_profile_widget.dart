@@ -7,6 +7,7 @@ import 'package:gym_guardian_membership/profile/presentation/bloc/update_profile
 import 'package:gym_guardian_membership/profile/presentation/widgets/delete_confirmation_widget.dart';
 import 'package:gym_guardian_membership/register/domain/entities/member_entity.dart';
 import 'package:gym_guardian_membership/utility/custom_text_form_field.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_dialog.dart';
 import 'package:os_basecode/os_basecode.dart';
@@ -58,9 +59,9 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
           if (state is UpdateProfileSuccess) {
             showBottomConfirmationDialogueAlert(
               imagePath: "assets/congrats.png",
-              title: "Profile Updated",
+              title: "Profil Diperbarui",
               subtitle:
-                  "Your profile details have been successfully updated. Please press OK to log in again and continue using the app.",
+                  "Detail profil Anda telah berhasil diperbarui. Tekan OK untuk masuk kembali dan melanjutkan penggunaan aplikasi.",
               handleConfirm: (context) {
                 context.read<LogoutMemberBloc>().add(DoLogoutMember());
                 context.pop();
@@ -69,9 +70,9 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
           } else if (state is UpdateProfileFailure) {
             showBottomDialogueAlert(
                 imagePath: "assets/sad.png",
-                title: "Update Failed",
+                title: "Perbarui Profil Gagal",
                 subtitle:
-                    "Something went wrong while updating your profile. Please try again or contact support if the issue persists.",
+                    "Terjadi kesalahan saat memperbarui profil Anda. Silakan coba lagi atau hubungi dukungan jika masalah terus berlanjut.",
                 duration: 3);
           }
         },
@@ -83,20 +84,20 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Edit Profile",
-                  style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
+                  "${context.l10n.updated} ${context.l10n.profile}",
+                  style: TextStyle(fontSize: 20.spMin, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "If you can't find the data you want to change, please contact customer service.",
+                  context.l10n.update_profile_subtitle,
                   style: TextStyle(fontSize: 11.spMin),
                 ),
                 10.verticalSpacingRadius,
-                CustomTextFormField(controller: nameController, title: "Name"),
+                CustomTextFormField(controller: nameController, title: context.l10n.full_name),
                 10.verticalSpacingRadius,
-                CustomTextFormField(controller: emailController, title: "Email"),
+                CustomTextFormField(controller: emailController, title: context.l10n.email),
                 20.verticalSpacingRadius,
                 PrimaryButton(
-                  title: "EDIT PROFILE",
+                  title: context.l10n.edit_profile,
                   onPressed: handleEditProfile,
                 ),
                 10.verticalSpacingRadius,
@@ -109,7 +110,7 @@ class _EditProfileWidgetState extends State<EditProfileWidget> {
                             builder: (dialogContext) => DeleteConfirmationWidget(),
                           );
                         },
-                        child: Text("Request Delete Account")))
+                        child: Text(context.l10n.request_delete_account)))
               ],
             ),
           ),

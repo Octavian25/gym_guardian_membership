@@ -4,5 +4,6 @@ abstract class RegisterAttendanceEvent {}
 
 class DoRegisterAttendance extends RegisterAttendanceEvent {
   final String memberCode;
-  DoRegisterAttendance(this.memberCode);
+  final String eligibleForPoints;
+  DoRegisterAttendance(this.memberCode, this.eligibleForPoints);
 }

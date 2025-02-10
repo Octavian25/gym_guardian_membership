@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/gemini_helper.dart';
 import 'package:gym_guardian_membership/utility/helper.dart';
+import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';
 import 'package:gym_guardian_membership/workout_recommendation/data/models/exercise_model.dart';
 import 'package:gym_guardian_membership/workout_recommendation/presentation/bloc/chat_history_bloc/chat_history_bloc.dart';
 import 'package:gym_guardian_membership/workout_recommendation/presentation/widgets/bottom_chat_form_widget.dart';
@@ -71,7 +71,16 @@ class _WorkoutRecommendationScreenState extends State<WorkoutRecommendationScree
                           actions: [
                             IconButton(
                                 onPressed: () async {
-                                  await clearChatHistory(context);
+                                  showBottomConfirmationDialogueAlert(
+                                    imagePath: "assets/clear_chat.png",
+                                    title: context.l10n.delete_chat_jiva,
+                                    subtitle: context.l10n.delete_chat_jiva_subtitle,
+                                    handleConfirm: (context) async {
+                                      await clearChatHistory(context);
+                                      if (!context.mounted) return;
+                                      context.pop();
+                                    },
+                                  );
                                 },
                                 icon: Icon(
                                   Icons.cleaning_services_outlined,
@@ -80,7 +89,7 @@ class _WorkoutRecommendationScreenState extends State<WorkoutRecommendationScree
                             10.horizontalSpaceRadius,
                           ],
                           title: Text(
-                            "Jimi ( Virtual Asisten )",
+                            "JIVA ( Virtual Assistance )",
                             style: TextStyle(
                                 fontSize: 18.spMin,
                                 color: onPrimaryColor,
@@ -101,7 +110,7 @@ class _WorkoutRecommendationScreenState extends State<WorkoutRecommendationScree
                           if (state is ChatHistorySuccess) {
                             customPromptController.clear();
                             Timer(
-                              1.seconds,
+                              200.milliseconds,
                               () {
                                 scrollController.animateTo(
                                     scrollController.position.maxScrollExtent,
@@ -120,17 +129,58 @@ class _WorkoutRecommendationScreenState extends State<WorkoutRecommendationScree
                                 ChatHistoryModel chatHistory = state.datas[index];
                                 if (chatHistory.role == "user") {
                                   return QuestionChatWidget(
-                                    chatHistory: chatHistory,
+                                    chatHistory: chatHistory.text,
+                                    timeStamp: chatHistory.timestamp,
                                   );
                                 } else {
                                   if (chatHistory.prompt.contains("```json")) {
-                                    ExerciseModel exerciseModel =
-                                        exerciseModelFromJson(extractJson(chatHistory.prompt));
-                                    return ExcerciseWidget(
-                                        exerciseModel: exerciseModel, chatHistory: chatHistory);
+                                    try {
+                                      Map<String, String> extractedData =
+                                          extractJson(chatHistory.prompt);
+                                      String jsonString = extractedData["jsonString"]!;
+
+                                      if (jsonString.isNotEmpty) {
+                                        ExerciseModel exerciseModel =
+                                            exerciseModelFromJson(jsonString);
+
+                                        List<Widget> children = [];
+
+                                        if (extractedData["beforeJson"]!.isNotEmpty) {
+                                          children.add(QuestionChatWidget(
+                                            chatHistory: extractedData["beforeJson"]!,
+                                            timeStamp: chatHistory.timestamp,
+                                            isSender: false,
+                                          ));
+                                        }
+
+                                        children.add(ExcerciseWidget(
+                                            exerciseModel: exerciseModel,
+                                            chatHistory: chatHistory));
+
+                                        if (extractedData["afterJson"]!.isNotEmpty) {
+                                          children.add(QuestionChatWidget(
+                                            chatHistory: extractedData["afterJson"]!,
+                                            timeStamp: chatHistory.timestamp,
+                                            isSender: false,
+                                          ));
+                                        }
+
+                                        return Column(
+                                          spacing: 10,
+                                          children: children,
+                                        );
+                                      } else {
+                                        return const Text(
+                                            "Data latihan tidak ditemukan atau format JSON salah."); // Pesan yang lebih informatif
+                                      }
+                                    } catch (e) {
+                                      return const Text(
+                                          "Error memproses data latihan. Periksa format JSON."); // Pesan yang lebih informatif
+                                    }
                                   } else {
                                     return QuestionChatWidget(
-                                      chatHistory: chatHistory,
+                                      chatHistory: chatHistory.text,
+                                      timeStamp: chatHistory.timestamp,
                                       isSender: false,
                                     );
                                   }
@@ -163,9 +213,11 @@ class _WorkoutRecommendationScreenState extends State<WorkoutRecommendationScree
 }
 
 class QuestionChatWidget extends StatelessWidget {
-  final ChatHistoryModel chatHistory;
+  final String chatHistory;
+  final DateTime timeStamp;
   final bool isSender;
-  const QuestionChatWidget({super.key, required this.chatHistory, this.isSender = true});
+  const QuestionChatWidget(
+      {super.key, required this.chatHistory, required this.timeStamp, this.isSender = true});
 
   @override
   Widget build(BuildContext context) {
@@ -183,14 +235,14 @@ class QuestionChatWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              chatHistory.text,
+              chatHistory,
               style: TextStyle(fontSize: 13.spMin),
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  formatDateWithTime(chatHistory.timestamp),
+                  formatDateWithTime(timeStamp),
                   style: TextStyle(fontSize: 8.spMin),
                 )
               ],

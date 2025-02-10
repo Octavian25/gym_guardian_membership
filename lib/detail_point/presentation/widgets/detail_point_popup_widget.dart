@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_guardian_membership/detail_point/domain/entities/point_history_entity.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 class DetailPointPopupWidget extends StatelessWidget {
@@ -26,9 +27,10 @@ class DetailPointPopupWidget extends StatelessWidget {
           ),
           10.verticalSpacingRadius,
           Text(
-            "Deskripsi", // Changed "Description" to "Deskripsi"
+            context.l10n.description, // Changed "Description" to "Deskripsi"
             style: TextStyle(fontSize: 12.spMin),
           ),
+          5.verticalSpacingRadius,
           Text(
             data.description,
             style: bebasNeue.copyWith(fontSize: 25.spMin),
@@ -41,7 +43,7 @@ class DetailPointPopupWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Poin Awal", // Changed "Initial Point" to "Poin Awal"
+                    context.l10n.starting_point, // Changed "Initial Point" to "Poin Awal"
                     style: TextStyle(fontSize: 12.spMin),
                   ),
                   Text(
@@ -56,7 +58,7 @@ class DetailPointPopupWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Poin Masuk", // Changed "Point In" to "Poin Masuk"
+                      context.l10n.entry_point, // Changed "Point In" to "Poin Masuk"
                       style: TextStyle(fontSize: 12.spMin),
                     ),
                     Text(
@@ -71,7 +73,7 @@ class DetailPointPopupWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Poin Keluar", // Changed "Point Out" to "Poin Keluar"
+                      context.l10n.final_point, // Changed "Point Out" to "Poin Keluar"
                       style: TextStyle(fontSize: 12.spMin),
                     ),
                     Text(

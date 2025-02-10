@@ -27,8 +27,8 @@ class LastThreeBookingWidget extends StatelessWidget {
           if (state.datas.isEmpty) {
             return SliverToBoxAdapter(
                 child: EmptyStateWidget(
-              title: "Belum Ada Riwayat Booking", // Translated
-              subtitle: "Kamu belum absen. Riwayat booking akan muncul setelah kamu check-in.",
+              title: context.l10n.booking_event_confirm_title, // Translated
+              subtitle: context.l10n.booking_event_confirm_subtitle,
             ));
           }
 
@@ -39,7 +39,7 @@ class LastThreeBookingWidget extends StatelessWidget {
               return ListTile(
                 onTap: () {
                   showBlurredBottomSheet(
-                    context: context,
+                    context: parentKey.currentContext!,
                     builder: (context) {
                       return BlurContainerWrapper(
                         child: DetailBookingWidget(

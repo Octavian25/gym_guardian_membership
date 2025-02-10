@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:gym_guardian_membership/body_metrics/presentation/pages/body_metrics_screen.dart';
 import 'package:gym_guardian_membership/detail_attendance_history/presentation/pages/detail_attendance_history_screen.dart';
 import 'package:gym_guardian_membership/detail_coupon/presentation/pages/detail_coupon_screen.dart';
 import 'package:gym_guardian_membership/detail_level/presentation/pages/detail_level_screen.dart';
 import 'package:gym_guardian_membership/detail_point/presentation/pages/detail_point_screen.dart';
 import 'package:gym_guardian_membership/forgot_password/presentation/pages/forgot_password_screen.dart';
+import 'package:gym_guardian_membership/gym_schedule/presentation/pages/gym_schedule_screen.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/detail_member_bloc/detail_member_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/fetch_all_gym_equipment_bloc/fetch_all_gym_equipment_bloc.dart';
 import 'package:gym_guardian_membership/homepage/presentation/pages/homepage_screen.dart';
@@ -15,6 +15,7 @@ import 'package:gym_guardian_membership/profile/presentation/pages/profile_scree
 import 'package:gym_guardian_membership/redeem_history/presentation/pages/redeem_history_screen.dart';
 import 'package:gym_guardian_membership/redeemable_item/presentation/pages/redeemable_item_screen.dart';
 import 'package:gym_guardian_membership/register/presentation/pages/register_screen.dart';
+import 'package:gym_guardian_membership/body_measurement_tracker/presentation/pages/body_measurement_tracker_screen.dart';
 import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/pages/arm_circumference_page.dart';
 import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/pages/body_fat_page.dart';
 import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/pages/chest_circumference_page.dart';
@@ -25,6 +26,7 @@ import 'package:gym_guardian_membership/register_body_measurement_tracker/presen
 import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/pages/weight_page.dart';
 import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/pages/welcome_page_body_measurement.dart';
 import 'package:gym_guardian_membership/shell_screen.dart';
+import 'package:gym_guardian_membership/splashscreen/presentation/bloc/get_system_data_bloc/get_system_data_bloc.dart';
 import 'package:gym_guardian_membership/splashscreen/presentation/pages/splashscreen_screen.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/verify_account/presentation/pages/verify_account_screen.dart';
@@ -36,10 +38,31 @@ GlobalKey<NavigatorState> shellKey = GlobalKey<NavigatorState>();
 
 GoRouter goRouter = GoRouter(navigatorKey: parentKey, initialLocation: "/splashscreen", routes: [
   GoRoute(
+    path: "/",
+    builder: (context, state) => SplashScreen(),
+    redirect: (context, state) async {
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      final isSplashFinish = pref.getBool("FINISH_SPLASH") ?? false;
+      if (isSplashFinish) {
+        return "/login";
+      }
+      final token = pref.getString(accessToken);
+      if (token != null && token.isNotEmpty) {
+        // Jika accessToken tersedia, redirect ke /homepage
+        // ignore: use_build_context_synchronously
+        context.read<DetailMemberBloc>().add(DoDetailMember(true));
+        return "/homepage";
+      }
+      // Tetap di halaman login jika tidak ada accessToken
+      return null;
+    },
+  ),
+  GoRoute(
     path: "/splashscreen",
     builder: (context, state) => SplashScreen(),
     redirect: (context, state) async {
       SharedPreferences pref = await SharedPreferences.getInstance();
+      context.read<GetSystemDataBloc>().add(DoGetSystemData());
       context.read<FetchAllGymEquipmentBloc>().add(DoFetchAllGymEquipment(null));
       final isSplashFinish = pref.getBool("FINISH_SPLASH") ?? false;
       if (isSplashFinish) {
@@ -49,7 +72,7 @@ GoRouter goRouter = GoRouter(navigatorKey: parentKey, initialLocation: "/splashs
       if (token != null && token.isNotEmpty) {
         // Jika accessToken tersedia, redirect ke /homepage
         // ignore: use_build_context_synchronously
-        context.read<DetailMemberBloc>().add(DoDetailMember());
+        context.read<DetailMemberBloc>().add(DoDetailMember(true));
         return "/homepage";
       }
       // Tetap di halaman login jika tidak ada accessToken
@@ -76,8 +99,19 @@ GoRouter goRouter = GoRouter(navigatorKey: parentKey, initialLocation: "/splashs
       navigatorKey: shellKey,
       parentNavigatorKey: parentKey,
       builder: (context, state, child) {
-        return ShellScreen(
-            body: child, activeIndex: state.uri.toString().contains("/homepage") ? 0 : 1);
+        var index = 0;
+        if (state.uri.toString().contains("/homepage")) {
+          index = 0;
+        } else if (state.uri.toString().contains("/gym-schedule")) {
+          index = 1;
+        } else if (state.uri.toString().contains("/workout-assistance")) {
+          index = 2;
+        } else if (state.uri.toString().contains("/body-measurements-tracker")) {
+          index = 3;
+        } else if (state.uri.toString().contains("/profile")) {
+          index = 4;
+        }
+        return ShellScreen(body: child, activeIndex: index);
       },
       routes: [
         GoRoute(
@@ -118,56 +152,113 @@ GoRouter goRouter = GoRouter(navigatorKey: parentKey, initialLocation: "/splashs
         GoRoute(
           path: "/profile",
           builder: (context, state) => ProfileScreen(),
-        )
+        ),
+        GoRoute(
+          path: "/workout-assistance",
+          builder: (context, state) => WorkoutRecommendationScreen(),
+        ),
+        GoRoute(
+          path: "/gym-schedule",
+          builder: (context, state) => GymScheduleScreen(),
+        ),
+        GoRoute(
+            path: "/body-measurements-tracker",
+            builder: (context, state) => BodyMeasurementTracker(),
+            routes: []),
       ]),
-  GoRoute(
-    path: "/workout-assistance",
-    builder: (context, state) => WorkoutRecommendationScreen(),
-  ),
-  GoRoute(path: "/body-metrics", builder: (context, state) => BodyMetricsScreen(), routes: [
-    ShellRoute(
-        builder: (context, state, child) {
-          return RegisterBodyMeasurementTracker(
-            body: child,
-            currentIndex: getBodyMeasureIndex(state.uri.toString()),
-          );
-        },
-        routes: [
-          GoRoute(
-              path: "register-body-measurements-tracker",
-              builder: (context, state) => WelcomePageRegisterBodymeasurement(),
-              routes: [
-                GoRoute(
-                  path: 'weight',
-                  builder: (context, state) => WeightRegisterBodymeasurement(),
-                ),
-                GoRoute(
-                  path: 'height',
-                  builder: (context, state) => HeightRegisterBodymeasurement(),
-                ),
-                GoRoute(
-                  path: 'chest-circumference',
-                  builder: (context, state) => ChestCirfumferenceRegisterBodymeasurement(),
-                ),
-                GoRoute(
-                  path: 'waist-circumference',
-                  builder: (context, state) => WaistCirfumferenceRegisterBodymeasurement(),
-                ),
-                GoRoute(
-                  path: 'thigh-circumference',
-                  builder: (context, state) => ThighCirfumferenceRegisterBodymeasurement(),
-                ),
-                GoRoute(
-                  path: 'arm-circumference',
-                  builder: (context, state) => ArmCirfumferenceRegisterBodymeasurement(),
-                ),
-                GoRoute(
-                  path: 'body-fat',
-                  builder: (context, state) => BodyFatRegisterBodymeasurement(),
-                )
-              ])
-        ])
-  ])
+  ShellRoute(
+      builder: (context, state, child) {
+        return RegisterBodyMeasurementTracker(
+          body: child,
+          fallbackURL: state.extra as String?,
+          currentIndex: getBodyMeasureIndex(state.uri.toString()),
+        );
+      },
+      routes: [
+        GoRoute(
+            path: "/register-body-measurements-tracker",
+            builder: (context, state) => WelcomePageRegisterBodymeasurement(),
+            routes: [
+              GoRoute(
+                path: 'weight',
+                builder: (context, state) => WeightRegisterBodymeasurement(),
+              ),
+              GoRoute(
+                path: 'height',
+                builder: (context, state) => HeightRegisterBodymeasurement(),
+              ),
+              GoRoute(
+                path: 'chest-circumference',
+                builder: (context, state) => ChestCirfumferenceRegisterBodymeasurement(),
+              ),
+              GoRoute(
+                path: 'waist-circumference',
+                builder: (context, state) => WaistCirfumferenceRegisterBodymeasurement(),
+              ),
+              GoRoute(
+                path: 'thigh-circumference',
+                builder: (context, state) => ThighCirfumferenceRegisterBodymeasurement(),
+              ),
+              GoRoute(
+                path: 'arm-circumference',
+                builder: (context, state) => ArmCirfumferenceRegisterBodymeasurement(),
+              ),
+              GoRoute(
+                path: 'body-fat',
+                builder: (context, state) => BodyFatRegisterBodymeasurement(),
+              )
+            ])
+      ]),
+
+  // GoRoute(path: "", builder: (context, state) => BodyMetricsScreen(), routes: [
+  //   GoRoute(
+  //     path: "body-measurements-tracker",
+  //     builder: (context, state) => BodyMeasurementTracker(),
+  //   ),
+  //   ShellRoute(
+  //       builder: (context, state, child) {
+  //         return RegisterBodyMeasurementTracker(
+  //           body: child,
+  //           fallbackURL: state.extra as String?,
+  //           currentIndex: getBodyMeasureIndex(state.uri.toString()),
+  //         );
+  //       },
+  //       routes: [
+  //         GoRoute(
+  //             path: "register-body-measurements-tracker",
+  //             builder: (context, state) => WelcomePageRegisterBodymeasurement(),
+  //             routes: [
+  //               GoRoute(
+  //                 path: 'weight',
+  //                 builder: (context, state) => WeightRegisterBodymeasurement(),
+  //               ),
+  //               GoRoute(
+  //                 path: 'height',
+  //                 builder: (context, state) => HeightRegisterBodymeasurement(),
+  //               ),
+  //               GoRoute(
+  //                 path: 'chest-circumference',
+  //                 builder: (context, state) => ChestCirfumferenceRegisterBodymeasurement(),
+  //               ),
+  //               GoRoute(
+  //                 path: 'waist-circumference',
+  //                 builder: (context, state) => WaistCirfumferenceRegisterBodymeasurement(),
+  //               ),
+  //               GoRoute(
+  //                 path: 'thigh-circumference',
+  //                 builder: (context, state) => ThighCirfumferenceRegisterBodymeasurement(),
+  //               ),
+  //               GoRoute(
+  //                 path: 'arm-circumference',
+  //                 builder: (context, state) => ArmCirfumferenceRegisterBodymeasurement(),
+  //               ),
+  //               GoRoute(
+  //                 path: 'body-fat',
+  //                 builder: (context, state) => BodyFatRegisterBodymeasurement(),
+  //               )
+  //             ])
+  //       ])
+  // ])
 ]);
 
 void closeAllDialogs(BuildContext context) {
@@ -178,10 +269,20 @@ void closeAllDialogs(BuildContext context) {
 
 int getBodyMeasureIndex(String uri) {
   switch (uri) {
-    case "/body-metrics/register-body-measurements-tracker/height":
+    case "/register-body-measurements-tracker/height":
       return 1;
-    case "/body-metrics/register-body-measurements-tracker/weight":
+    case "/register-body-measurements-tracker/weight":
       return 2;
+    case "/register-body-measurements-tracker/chest-circumference":
+      return 3;
+    case "/register-body-measurements-tracker/waist-circumference":
+      return 4;
+    case "/register-body-measurements-tracker/thigh-circumference":
+      return 5;
+    case "/register-body-measurements-tracker/arm-circumference":
+      return 6;
+    case "/register-body-measurements-tracker/body-fat":
+      return 7;
     default:
       return 0;
   }

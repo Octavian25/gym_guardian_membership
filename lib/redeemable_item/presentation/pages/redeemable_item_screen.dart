@@ -110,7 +110,7 @@ class _RedeemableItemScreenState extends State<RedeemableItemScreen> {
               subtitle:
                   "Your redeem request has been processed successfully. Please visit our store and show your unique code to our staff to claim your item. You can also check your redemption history by tapping the icon at the top. Thank you for using our service!",
               handleConfirm: (context) {
-                context.read<DetailMemberBloc>().add(DoDetailMember());
+                context.read<DetailMemberBloc>().add(DoDetailMember(false));
                 context.pop();
               },
             );

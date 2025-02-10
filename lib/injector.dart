@@ -1,9 +1,25 @@
+import 'package:gym_guardian_membership/body_measurement_tracker/data/datasource/body_measurement_tracker_local_datasource.dart';
+import 'package:gym_guardian_membership/body_measurement_tracker/data/datasource/body_measurement_tracker_remote_datasource.dart';
+import 'package:gym_guardian_membership/body_measurement_tracker/data/repository/body_measurement_tracker_repository.dart';
+import 'package:gym_guardian_membership/body_measurement_tracker/domain/repository/repository.dart';
+import 'package:gym_guardian_membership/body_measurement_tracker/domain/usecase/fetch_body_measurement.dart';
+import 'package:gym_guardian_membership/body_measurement_tracker/presentation/bloc/fetch_body_measurement_bloc/fetch_body_measurement_bloc.dart';
 import 'package:gym_guardian_membership/detail_point/data/datasource/detail_point_local_datasource.dart';
 import 'package:gym_guardian_membership/detail_point/data/datasource/detail_point_remote_datasource.dart';
 import 'package:gym_guardian_membership/detail_point/data/repository/detail_point_repository.dart';
 import 'package:gym_guardian_membership/detail_point/domain/repository/repository.dart';
 import 'package:gym_guardian_membership/detail_point/domain/usecase/fetch_point_history_by_code.dart';
 import 'package:gym_guardian_membership/detail_point/presentation/bloc/fetch_detail_point_bloc/fetch_detail_point_bloc.dart';
+import 'package:gym_guardian_membership/gym_schedule/data/datasource/gym_schedule_local_datasource.dart';
+import 'package:gym_guardian_membership/gym_schedule/data/datasource/gym_schedule_remote_datasource.dart';
+import 'package:gym_guardian_membership/gym_schedule/data/repository/gym_schedule_repository.dart';
+import 'package:gym_guardian_membership/gym_schedule/domain/repository/repository.dart';
+import 'package:gym_guardian_membership/gym_schedule/domain/usecase/cancel_reservation_event_schedule.dart';
+import 'package:gym_guardian_membership/gym_schedule/domain/usecase/fetch_event_schedule.dart';
+import 'package:gym_guardian_membership/gym_schedule/domain/usecase/reservation_event_schedule.dart';
+import 'package:gym_guardian_membership/gym_schedule/presentation/bloc/cancel_reservation_event_schedule_bloc/cancel_reservation_event_schedule_bloc.dart';
+import 'package:gym_guardian_membership/gym_schedule/presentation/bloc/fetch_event_schedule_bloc/fetch_event_schedule_bloc.dart';
+import 'package:gym_guardian_membership/gym_schedule/presentation/bloc/reservation_event_schedule_bloc/reservation_event_schedule_bloc.dart';
 import 'package:gym_guardian_membership/homepage/data/datasource/homepage_local_datasource.dart';
 import 'package:gym_guardian_membership/homepage/data/datasource/homepage_remote_datasource.dart';
 import 'package:gym_guardian_membership/homepage/data/repository/homepage_repository.dart';
@@ -69,6 +85,18 @@ import 'package:gym_guardian_membership/register/data/repository/register_reposi
 import 'package:gym_guardian_membership/register/domain/repository/repository.dart';
 import 'package:gym_guardian_membership/register/domain/usecase/register_member.dart';
 import 'package:gym_guardian_membership/register/presentation/bloc/register_member_bloc/register_member_bloc.dart';
+import 'package:gym_guardian_membership/register_body_measurement_tracker/data/datasource/register_body_measurement_tracker_local_datasource.dart';
+import 'package:gym_guardian_membership/register_body_measurement_tracker/data/datasource/register_body_measurement_tracker_remote_datasource.dart';
+import 'package:gym_guardian_membership/register_body_measurement_tracker/data/repository/register_body_measurement_tracker_repository.dart';
+import 'package:gym_guardian_membership/register_body_measurement_tracker/domain/repository/repository.dart';
+import 'package:gym_guardian_membership/register_body_measurement_tracker/domain/usecase/register_body_measurement_tracker.dart';
+import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/bloc/register_body_measurement_bloc/register_body_measurement_bloc.dart';
+import 'package:gym_guardian_membership/splashscreen/data/datasource/splashscreen_local_datasource.dart';
+import 'package:gym_guardian_membership/splashscreen/data/datasource/splashscreen_remote_datasource.dart';
+import 'package:gym_guardian_membership/splashscreen/data/repository/splashscreen_repository.dart';
+import 'package:gym_guardian_membership/splashscreen/domain/repository/repository.dart';
+import 'package:gym_guardian_membership/splashscreen/domain/usecase/get_system_data.dart';
+import 'package:gym_guardian_membership/splashscreen/presentation/bloc/get_system_data_bloc/get_system_data_bloc.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/router.dart';
 import 'package:gym_guardian_membership/workout_recommendation/presentation/bloc/chat_history_bloc/chat_history_bloc.dart';
@@ -219,4 +247,56 @@ void initLocator() {
   locator.registerLazySingleton<ChatHistoryBloc>(() => ChatHistoryBloc(
         locator(),
       ));
+
+  //REGISTER BODY MEASUREMENT
+  locator.registerLazySingleton<RegisterBodyMeasurementTrackerRepository>(
+      () => RegisterBodyMeasurementTrackerRepositoryImpl(locator(), locator()));
+  locator.registerLazySingleton<RegisterBodyMeasurementTrackerLocalDataSource>(
+      () => RegisterBodyMeasurementTrackerLocalDataSourceImpl());
+  locator.registerLazySingleton<RegisterBodyMeasurementTrackerRemoteDataSource>(
+      () => RegisterBodyMeasurementTrackerRemoteDataSourceImpl(locator()));
+  locator.registerLazySingleton<RegisterBodyMeasurementTrackerUsecase>(
+      () => RegisterBodyMeasurementTrackerUsecase(locator()));
+  locator.registerLazySingleton<RegisterBodyMeasurementBloc>(
+      () => RegisterBodyMeasurementBloc(locator()));
+
+  // BODY MEASUREMENT TRACKER
+  locator.registerLazySingleton<BodyMeasurementTrackerRepository>(
+      () => BodyMeasurementTrackerRepositoryImpl(locator(), locator()));
+  locator.registerLazySingleton<BodyMeasurementTrackerLocalDataSource>(
+      () => BodyMeasurementTrackerLocalDataSourceImpl());
+  locator.registerLazySingleton<BodyMeasurementTrackerRemoteDataSource>(
+      () => BodyMeasurementTrackerRemoteDataSourceImpl(locator()));
+  locator.registerLazySingleton<FetchBodyMeasurementUsecase>(
+      () => FetchBodyMeasurementUsecase(locator()));
+  locator
+      .registerLazySingleton<FetchBodyMeasurementBloc>(() => FetchBodyMeasurementBloc(locator()));
+
+  //GYM SCHEDUL
+  locator.registerLazySingleton<GymScheduleRepository>(
+      () => GymScheduleRepositoryImpl(locator(), locator()));
+  locator.registerLazySingleton<GymScheduleLocalDataSource>(() => GymScheduleLocalDataSourceImpl());
+  locator.registerLazySingleton<GymScheduleRemoteDataSource>(
+      () => GymScheduleRemoteDataSourceImpl(locator()));
+  locator
+      .registerLazySingleton<FetchEventScheduleUsecase>(() => FetchEventScheduleUsecase(locator()));
+  locator.registerLazySingleton<FetchEventScheduleBloc>(() => FetchEventScheduleBloc(locator()));
+  locator.registerLazySingleton<ReservationEventScheduleUsecase>(
+      () => ReservationEventScheduleUsecase(locator()));
+  locator.registerLazySingleton<ReservationEventScheduleBloc>(
+      () => ReservationEventScheduleBloc(locator()));
+  locator.registerLazySingleton<CancelReservationEventScheduleUsecase>(
+      () => CancelReservationEventScheduleUsecase(locator()));
+  locator.registerLazySingleton<CancelReservationEventScheduleBloc>(
+      () => CancelReservationEventScheduleBloc(locator()));
+
+  //SPLASHSCREEN
+  locator.registerLazySingleton<SplashscreenRepository>(
+      () => SplashscreenRepositoryImpl(locator(), locator(), locator()));
+  locator
+      .registerLazySingleton<SplashscreenLocalDataSource>(() => SplashscreenLocalDataSourceImpl());
+  locator.registerLazySingleton<SplashscreenRemoteDataSource>(
+      () => SplashscreenRemoteDataSourceImpl(locator()));
+  locator.registerLazySingleton<GetSystemDataUsecase>(() => GetSystemDataUsecase(locator()));
+  locator.registerLazySingleton<GetSystemDataBloc>(() => GetSystemDataBloc(locator()));
 }

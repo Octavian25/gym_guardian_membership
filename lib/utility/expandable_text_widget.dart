@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 
 class ExpandableText extends StatefulWidget {
   final String text;
@@ -56,7 +57,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                     });
                   },
                   child: Text(
-                    _isExpanded ? "See Less" : "See All",
+                    _isExpanded ? context.l10n.show_less : context.l10n.see_all,
                     style:
                         TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12),
                   ),

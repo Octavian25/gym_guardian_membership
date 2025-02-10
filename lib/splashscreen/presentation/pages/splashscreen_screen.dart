@@ -124,6 +124,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                             if (_tabController.index == 3) {
                               SharedPreferences pref = await SharedPreferences.getInstance();
                               await pref.setBool("FINISH_SPLASH", true);
+                              if (!context.mounted) return;
                               context.go("/login");
                               return;
                             }

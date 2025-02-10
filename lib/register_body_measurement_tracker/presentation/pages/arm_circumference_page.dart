@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gym_guardian_membership/login/presentation/widgets/primary_button.dart';
-import 'package:gym_guardian_membership/register_body_measurement_tracker/domain/entities/body_measurement_entity.dart';
 import 'package:gym_guardian_membership/register_body_measurement_tracker/presentation/bloc/body_measurement_bloc/body_measurement_bloc.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/utility/ruler_picker_widget.dart';
 import 'package:os_basecode/os_basecode.dart';
 
@@ -29,7 +29,7 @@ class _ArmCirfumferenceRegisterBodymeasurementState
             SizedBox(
               width: 0.7.sw,
               child: Text(
-                "Berapa Lingkar Lengan kamu saat ini?",
+                context.l10n.hows_your_arm_circumference,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20.spMin, fontWeight: FontWeight.bold),
               ),
@@ -98,17 +98,38 @@ class _ArmCirfumferenceRegisterBodymeasurementState
               ),
             ),
             20.verticalSpacingRadius,
-            PrimaryButton(
-              title: "Selanjutnya",
-              onPressed: () {
-                var currentState = context.read<BodyMeasurementBloc>().state;
-                if (currentState is BodyMeasurementSuccess) {
-                  context.read<BodyMeasurementBloc>().add(DoBodyMeasurement(
-                      currentState.datas.copyWith(thighCircumference: armNotifier.value)));
-                }
+            Row(
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: PrimaryButtonIcon(
+                    color: onPrimaryColor,
+                    icon: Icon(
+                      Icons.chevron_left_rounded,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      context.go("/register-body-measurements-tracker/thigh-circumference");
+                    },
+                  ),
+                ),
+                5.horizontalSpaceRadius,
+                Flexible(
+                  flex: 4,
+                  child: PrimaryButton(
+                    title: context.l10n.next,
+                    onPressed: () {
+                      var currentState = context.read<BodyMeasurementBloc>().state;
+                      if (currentState is BodyMeasurementSuccess) {
+                        context.read<BodyMeasurementBloc>().add(DoBodyMeasurement(
+                            currentState.datas.copyWith(armCircumference: armNotifier.value)));
+                      }
 
-                context.go("/body-metrics/register-body-measurements-tracker/body-fat");
-              },
+                      context.go("/register-body-measurements-tracker/body-fat");
+                    },
+                  ),
+                ),
+              ],
             )
           ],
         ),

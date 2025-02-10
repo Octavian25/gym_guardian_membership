@@ -57,7 +57,7 @@ void showSuccess(String message, BuildContext context) {
         Expanded(
             child: Text(
           message,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(color: onPrimaryColor, fontWeight: FontWeight.bold),
         )),
         TextButton(
           onPressed: () {
@@ -93,7 +93,7 @@ void showSuccessWithoutButton(String message, BuildContext context) {
     child: Text(
       message,
       textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      style: TextStyle(color: onPrimaryColor, fontWeight: FontWeight.bold),
     ),
   );
   fToast.removeCustomToast();

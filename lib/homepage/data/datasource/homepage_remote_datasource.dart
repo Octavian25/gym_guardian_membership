@@ -1,4 +1,3 @@
-
 import 'package:gym_guardian_membership/homepage/data/models/activity_member_model.dart';
 import 'package:gym_guardian_membership/homepage/data/models/booking_model.dart';
 import 'package:gym_guardian_membership/homepage/data/models/gym_equipment_model.dart';
@@ -16,7 +15,8 @@ abstract class HomepageRemoteDataSource {
   Future<String> cancelBooking(String id);
   Future<BookingModel> fetchAllBookings(String memberCode, int? page, int? limit);
   Future<String> logoutMember(String userId, String refreshToken);
-  Future<RegisterAttendanceResponseModel> registerAttendance(String memberCode);
+  Future<RegisterAttendanceResponseModel> registerAttendance(
+      String memberCode, String eligibleForPoints);
 }
 
 class HomepageRemoteDataSourceImpl implements HomepageRemoteDataSource {
@@ -127,9 +127,11 @@ class HomepageRemoteDataSourceImpl implements HomepageRemoteDataSource {
   }
 
   @override
-  Future<RegisterAttendanceResponseModel> registerAttendance(String memberCode) async {
+  Future<RegisterAttendanceResponseModel> registerAttendance(
+      String memberCode, String eligibleForPoints) async {
     try {
-      var response = await dio.get("$memberAttendanceAPI/$memberCode");
+      var response = await dio.get("$memberAttendanceAPI/$memberCode",
+          queryParameters: {"eligibleForPoints": eligibleForPoints});
       return RegisterAttendanceResponseModel.fromJson(response.data);
     } on DioException catch (e) {
       throw DatabaseException(

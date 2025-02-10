@@ -9,7 +9,8 @@ class DetailMemberLoading extends DetailMemberState {}
 
 class DetailMemberSuccess extends DetailMemberState {
   final MemberEntity datas;
-  DetailMemberSuccess(this.datas);
+  final bool initState;
+  DetailMemberSuccess(this.datas, this.initState);
 }
 
 class DetailMemberFailure extends DetailMemberState {

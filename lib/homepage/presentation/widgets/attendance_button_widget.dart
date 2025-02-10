@@ -6,30 +6,106 @@ import 'package:gym_guardian_membership/homepage/presentation/widgets/widgets.da
 import 'package:gym_guardian_membership/login/presentation/widgets/primary_button.dart';
 import 'package:gym_guardian_membership/utility/blurred_dialogue_widget.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/utility/router.dart';
 import 'package:os_basecode/os_basecode.dart';
 import 'package:os_beacon_finder/beacon_finder.dart';
 
-class AttendanceButtonWidget extends StatelessWidget {
+class AttendanceButtonWidget extends StatefulWidget {
   const AttendanceButtonWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
-    void handleSendRegisterAttendance() {
-      var memberState = context.read<DetailMemberBloc>().state;
-      if (memberState is DetailMemberSuccess) {
-        context
-            .read<RegisterAttendanceBloc>()
-            .add(DoRegisterAttendance(memberState.datas.memberCode));
+  State<AttendanceButtonWidget> createState() => AttendanceButtonWidgetState();
+}
+
+class AttendanceButtonWidgetState extends State<AttendanceButtonWidget> {
+  void startAttendanceProcedure(
+      bool onSite, bool showCheckoutConfirmation, String eligibleForPoints) async {
+    if (onSite && showCheckoutConfirmation) {
+      var checkOutConfirm = await showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          backgroundColor: Colors.white,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                "assets/cancel_booking.png",
+                width: 0.3.sw,
+              ),
+              10.verticalSpacingRadius,
+              Text(
+                context.l10n.checkout_confirmation_title,
+                style: bebasNeue.copyWith(fontSize: 25.spMin),
+              ),
+              5.verticalSpacingRadius,
+              Text(
+                context.l10n.checkout_confirmation_subtitle,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          actionsOverflowDirection: VerticalDirection.down,
+          actionsAlignment: MainAxisAlignment.center,
+          actionsOverflowAlignment: OverflowBarAlignment.center,
+          actions: [
+            FilledButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
+                onPressed: () {
+                  dialogContext.pop(false);
+                  return;
+                },
+                child: Text(context.l10n.checkout_confirmation_negative)), // More concise
+            TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                onPressed: () {
+                  dialogContext.pop(true);
+                },
+                child: Text(context.l10n.check_out)) // More concise
+          ],
+        ),
+      );
+      if (!checkOutConfirm) {
+        return;
       }
     }
 
+    showBlurredBottomSheet(
+      context: parentKey.currentContext!,
+      builder: (context) {
+        return BlurContainerWrapper(
+          child: ScanningBeaconWidget(
+            title: onSite
+                ? "${context.l10n.check_out} ${context.l10n.attendance}"
+                : "${context.l10n.check_in} ${context.l10n.attendance}", // Translated
+            cancelText: context.l10n.cancel, // Translated
+            descriptionTitle: context.l10n.beacon_scan_title, // Translated and improved
+            descriptionSubtitle: context.l10n.beacon_scan_subtitle, // Translated and improved
+            distanceTitle: context.l10n.beacon_distance, // Translated
+            handelBeaconError: (error, stack) {},
+            handelScanningBeaconDone: () {},
+            handleBeaconFound: (beaconDetail) {
+              var memberState = context.read<DetailMemberBloc>().state;
+              if (memberState is DetailMemberSuccess) {
+                context
+                    .read<RegisterAttendanceBloc>()
+                    .add(DoRegisterAttendance(memberState.datas.memberCode, eligibleForPoints));
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocListener<RegisterAttendanceBloc, RegisterAttendanceState>(
       listener: (context, state) {
         if (state is RegisterAttendanceSuccess) {
-          context.read<DetailMemberBloc>().add(DoDetailMember());
+          context.read<DetailMemberBloc>().add(DoDetailMember(false));
           RegisterAttendanceResponseEntity data = state.datas;
           context.pop();
           showBlurredBottomSheet(
@@ -57,79 +133,11 @@ class AttendanceButtonWidget extends StatelessWidget {
           builder: (context, state) {
             if (state is DetailMemberSuccess) {
               return PrimaryButton(
-                title: state.datas.onSite ? "Check Out Attendance" : "Check In Attendance",
+                title: state.datas.onSite
+                    ? "${context.l10n.check_out} ${context.l10n.attendance}"
+                    : "${context.l10n.check_in} ${context.l10n.attendance}",
                 onPressed: () async {
-                  if (state.datas.onSite) {
-                    var checkOutConfirm = await showDialog(
-                      context: context,
-                      builder: (dialogContext) => AlertDialog(
-                        backgroundColor: Colors.white,
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Image.asset(
-                              "assets/cancel_booking.png",
-                              width: 0.3.sw,
-                            ),
-                            10.verticalSpacingRadius,
-                            Text(
-                              "Mau Check Out?",
-                              style: bebasNeue.copyWith(fontSize: 25.spMin),
-                            ),
-                            5.verticalSpacingRadius,
-                            Text(
-                              "Sesi akan berakhir, poin dan kehadiran diperbarui. Oke?",
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                        actionsOverflowDirection: VerticalDirection.down,
-                        actionsAlignment: MainAxisAlignment.center,
-                        actionsOverflowAlignment: OverflowBarAlignment.center,
-                        actions: [
-                          FilledButton(
-                              style: TextButton.styleFrom(foregroundColor: Colors.white),
-                              onPressed: () {
-                                dialogContext.pop(false);
-                                return;
-                              },
-                              child: Text("Tetap di Sini")), // More concise
-                          TextButton(
-                              style: TextButton.styleFrom(foregroundColor: Colors.red),
-                              onPressed: () {
-                                dialogContext.pop(true);
-                              },
-                              child: Text("Check Out")) // More concise
-                        ],
-                      ),
-                    );
-                    if (!checkOutConfirm) {
-                      return;
-                    }
-                  }
-
-                  showBlurredBottomSheet(
-                    context: parentKey.currentContext!,
-                    builder: (context) {
-                      return BlurContainerWrapper(
-                        child: ScanningBeaconWidget(
-                          title: state.datas.onSite
-                              ? "Check Out Kehadiran"
-                              : "Check In Kehadiran", // Translated
-                          cancelText: "Batal", // Translated
-                          descriptionTitle: "Dekati Titik Pengecekan", // Translated and improved
-                          descriptionSubtitle:
-                              "Pastikan Anda berada di dekat lokasi titik pengecekan agar kehadiran Anda tercatat.", // Translated and improved
-                          distanceTitle: "Jarak ke Lokasi Titik Pengecekan", // Translated
-                          handelBeaconError: (error, stack) {},
-                          handelScanningBeaconDone: () {},
-                          handleBeaconFound: (beaconDetail) {
-                            handleSendRegisterAttendance();
-                          },
-                        ),
-                      );
-                    },
-                  );
+                  startAttendanceProcedure(state.datas.onSite, true, "YES");
                 },
               ).animate().slideY(begin: -0.1, end: 0).fadeIn();
             } else {

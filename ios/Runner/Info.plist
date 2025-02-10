@@ -33,7 +33,11 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>App needs location permissions to scan nearby beacons.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>App needs access speech recognition permissions to start workout automatically.</string>
+	<key>NSMicrophoneUsageDescription</key>
 	<string>App needs location permissions to scan nearby beacons.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>App needs microphone Usage permissions to start workout automatically.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -43,15 +47,11 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 </dict>
 </plist>

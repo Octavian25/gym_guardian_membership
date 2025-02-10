@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gym_guardian_membership/injector.dart';
 import 'package:gym_guardian_membership/utility/blurred_dialogue_widget.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/jimi_menu_widget.dart';
 import 'package:gym_guardian_membership/utility/router.dart';
-import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 class ShellScreen extends StatefulWidget {
@@ -21,37 +19,6 @@ class _ShellScreenState extends State<ShellScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: widget.body,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            SharedPreferences pref = locator<SharedPreferences>();
-            bool isJimiRunning = pref.getBool("gymMateBoot") ?? false;
-            if (isJimiRunning) {
-              showJimiMenu();
-            } else {
-              showBottomConfirmationDialogueAlert(
-                  imagePath: "assets/ai.png",
-                  title: "Selamat Datang di Jimi \nAsisten Latihan Pintar Anda!",
-                  subtitle:
-                      "Jimi siap membantu Anda mencapai target kebugaran dengan rencana latihan yang dipersonalisasi. Dapatkan rekomendasi workout terbaik sesuai dengan kebutuhan dan jadwal Anda!",
-                  handleConfirm: (context) {
-                    pref.setBool("gymMateBoot", true);
-                    context.pop();
-                    showJimiMenu();
-                  });
-            }
-          },
-          enableFeedback: true,
-          backgroundColor: primaryColor,
-          elevation: 3,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Image.asset(
-              "assets/ai_floating.png",
-            ),
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
         bottomNavigationBar: Container(
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(color: const Color.fromARGB(31, 97, 97, 97), blurRadius: 10, spreadRadius: 2)
@@ -60,9 +27,9 @@ class _ShellScreenState extends State<ShellScreen> {
               backgroundColor: Colors.white,
               shadowColor: Colors.black,
               elevation: 5,
-              indicatorColor: "#E7F8D0".toColor(),
+              indicatorColor: primaryColor,
               surfaceTintColor: Colors.white,
-              height: 50.h,
+              height: 55.h,
               selectedIndex: widget.activeIndex,
               onDestinationSelected: (value) {
                 switch (value) {
@@ -70,6 +37,15 @@ class _ShellScreenState extends State<ShellScreen> {
                     context.go("/homepage");
                     break;
                   case 1:
+                    context.go("/gym-schedule");
+                    break;
+                  case 2:
+                    context.go("/workout-assistance");
+                    break;
+                  case 3:
+                    context.go("/body-measurements-tracker");
+                    break;
+                  case 4:
                     context.go("/profile");
                     break;
                   default:
@@ -77,17 +53,41 @@ class _ShellScreenState extends State<ShellScreen> {
               },
               destinations: [
                 NavigationDestination(
-                    icon: Icon(Icons.home_outlined),
+                    icon: Icon(Icons.home_outlined, color: Colors.black54),
                     selectedIcon: Icon(
                       Icons.home_rounded,
-                      color: primaryColor,
+                      color: onPrimaryColor,
                     ),
                     label: "Home"),
                 NavigationDestination(
-                    icon: Icon(Icons.person_outline),
+                    icon: Icon(Icons.event_note, color: Colors.black54),
+                    selectedIcon: Icon(
+                      Icons.event_note,
+                      color: onPrimaryColor,
+                    ),
+                    label: "Calendar"),
+                NavigationDestination(
+                    icon: Icon(Icons.smart_toy_outlined, color: Colors.black54),
+                    selectedIcon: Icon(
+                      Icons.smart_toy,
+                      color: onPrimaryColor,
+                    ),
+                    label: "JIVA"),
+                NavigationDestination(
+                    icon: Icon(Icons.show_chart, color: Colors.black54),
+                    selectedIcon: Icon(
+                      Icons.show_chart,
+                      color: onPrimaryColor,
+                    ),
+                    label: "Body"),
+                NavigationDestination(
+                    icon: Icon(
+                      Icons.person_outline,
+                      color: Colors.black54,
+                    ),
                     selectedIcon: Icon(
                       Icons.person_rounded,
-                      color: primaryColor,
+                      color: onPrimaryColor,
                     ),
                     label: "Profile")
               ]),

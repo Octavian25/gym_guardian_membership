@@ -61,7 +61,7 @@ class _DetailLevelScreenState extends State<DetailLevelScreen> {
               SliverToBoxAdapter(child: 10.verticalSpacingRadius),
               SliverToBoxAdapter(
                   child: Center(
-                child: Text("Level Saat Ini"),
+                child: Text(context.l10n.current_level),
               ).animate().slideY(begin: -0.3, end: 0)),
               SliverToBoxAdapter(
                   child: Center(

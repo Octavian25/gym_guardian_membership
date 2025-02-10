@@ -31,11 +31,11 @@ class _AddBookingWidgetState extends State<AddBookingWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Layanan Booking",
+            context.l10n.reservation_service,
             style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
           ),
           Text(
-            "Ini hanya estimasi, tidak apa-apa jika waktunya lebih lama.",
+            context.l10n.reservation_service_subtitle,
             style: TextStyle(fontSize: 11.spMin),
           ),
           10.verticalSpacingRadius,
@@ -49,15 +49,16 @@ class _AddBookingWidgetState extends State<AddBookingWidget> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Tanggal",
+                  context.l10n.date,
                   style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.w300),
                 ),
                 TextFormField(
                   controller: dateController,
                   showCursor: false,
+                  enabled: false,
                   decoration: InputDecoration(
                       isDense: true,
-                      hintText: "Klik ikon kalender untuk memilih tanggal",
+                      hintText: context.l10n.click_calendar_icon,
                       suffixIcon: IconButton(
                           onPressed: () async {
                             DateTime? dateSelected = await showDatePicker(
@@ -86,7 +87,7 @@ class _AddBookingWidgetState extends State<AddBookingWidget> {
           ),
           20.verticalSpacingRadius,
           Text(
-            "Maaf, pemesanan hanya tersedia untuk hari ini ya.  Terima kasih atas pengertiannya!",
+            context.l10n.reservation_only_today,
             style: TextStyle(fontSize: 11.spMin),
           ),
           10.verticalSpacingRadius,
@@ -102,9 +103,8 @@ class _AddBookingWidgetState extends State<AddBookingWidget> {
                   showBottomDialogueAlert(
                       buildContext: context,
                       imagePath: "assets/congrats.png",
-                      title: "Yeay, Pemesanan Berhasil!",
-                      subtitle:
-                          "Reservasi Anda sudah siap! Sampai jumpa dan selamat menikmati layanan kami!",
+                      title: context.l10n.reservation_success_title,
+                      subtitle: context.l10n.reservation_success_subtitle,
                       duration: 5);
                 }
               } else if (state is RequestBookingFailure) {
@@ -113,7 +113,7 @@ class _AddBookingWidgetState extends State<AddBookingWidget> {
             },
             builder: (context, state) {
               return PrimaryButton(
-                title: "PESAN SEKARANG!",
+                title: "${context.l10n.reservation_now}!",
                 onPressed: state is RequestBookingLoading ? null : handleBooking,
               );
             },

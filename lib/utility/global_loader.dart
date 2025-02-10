@@ -54,6 +54,51 @@ class GlobalLoader {
     parentKey.currentState?.overlay?.insert(overlay);
   }
 
+  static void showToast() {
+    if (parentKey.currentContext == null) return;
+    if (_currentOverlay != null) return; // Jangan tampilkan jika sudah ada overlay aktif
+
+    final overlay = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          // Latar belakang semi-transparan
+          Container(
+            color: Colors.black.withValues(alpha: 0.5),
+            alignment: Alignment.center, // Loader
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  hide();
+                },
+                child: Ink(
+                    width: 1.sw,
+                    padding: EdgeInsets.all(10),
+                    decoration:
+                        BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Sedang Mengambil Data..."),
+                        10.horizontalSpaceRadius,
+                        SizedBox(height: 40.h, width: 40.h, child: CircularProgressIndicator())
+                      ],
+                    )),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+
+    _currentOverlay = overlay;
+
+    parentKey.currentState?.overlay?.insert(overlay);
+  }
+
   /// Menghapus overlay loading
   static void hide() {
     _currentOverlay?.remove();

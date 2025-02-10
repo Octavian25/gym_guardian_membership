@@ -43,25 +43,25 @@ class _JimiMenuWidgetState extends State<JimiMenuWidget> {
     context
         .read<WorkoutSuggestionsBloc>()
         .add(DoWorkoutSuggestions(previewRegistrationEntity, null, gymEquipment));
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      showDragHandle: true,
-      backgroundColor: Colors.white,
-      builder: (context) {
-        return WorkoutSuggestionResultWidget(
-            data: previewRegistrationEntity,
-            handleReCreate: (customPromp) async {
-              SharedPreferences preferences = await SharedPreferences.getInstance();
-              preferences.remove("lastGeneratedResult");
-              if (!context.mounted) return;
-              context
-                  .read<WorkoutSuggestionsBloc>()
-                  .add(DoWorkoutSuggestions(previewRegistrationEntity, customPromp, gymEquipment));
-            });
-      },
-    );
+    // showModalBottomSheet(
+    //   context: context,
+    //   isScrollControlled: true,
+    //   useSafeArea: true,
+    //   showDragHandle: true,
+    //   backgroundColor: Colors.white,
+    //   builder: (context) {
+    //     return WorkoutSuggestionResultWidget(
+    //         data: previewRegistrationEntity,
+    //         handleReCreate: (customPromp) async {
+    //           SharedPreferences preferences = await SharedPreferences.getInstance();
+    //           preferences.remove("lastGeneratedResult");
+    //           if (!context.mounted) return;
+    //           context
+    //               .read<WorkoutSuggestionsBloc>()
+    //               .add(DoWorkoutSuggestions(previewRegistrationEntity, customPromp, gymEquipment));
+    //         });
+    //   },
+    // );
   }
 
   @override
@@ -84,7 +84,7 @@ class _JimiMenuWidgetState extends State<JimiMenuWidget> {
                 10.verticalSpacingRadius,
                 Center(
                   child: Text(
-                    "Jimi – Smart Workout Assistant ",
+                    "JIVA – Smart Workout Assistant ",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
                   ),
@@ -92,7 +92,7 @@ class _JimiMenuWidgetState extends State<JimiMenuWidget> {
                 5.verticalSpacingRadius,
                 Center(
                   child: Text(
-                    "Optimalkan latihan Anda dengan Jimi!",
+                    "Optimalkan latihan Anda dengan JIVA!",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12.spMin, color: Colors.black54),
                   ),
@@ -134,25 +134,6 @@ class _JimiMenuWidgetState extends State<JimiMenuWidget> {
                     context.go("/workout-assistance");
                   },
                 ),
-                Divider(),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.show_chart_outlined),
-                  title: Text(
-                    "JIMI Body Metrics",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    "Lacak, analisis, dan optimalkan progres tubuhmu dengan JIMI!",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12.spMin),
-                  ),
-                  onTap: () {
-                    context.go("/body-metrics");
-                  },
-                ),
-                Divider(),
                 20.verticalSpacingRadius,
                 PrimaryButton(
                     title: "TUTUP",
@@ -166,7 +147,7 @@ class _JimiMenuWidgetState extends State<JimiMenuWidget> {
             return ErrorBuilderWidget(
               errorMessage: state.message,
               handleReload: () {
-                context.read<DetailMemberBloc>().add(DoDetailMember());
+                context.read<DetailMemberBloc>().add(DoDetailMember(false));
               },
             );
           } else {

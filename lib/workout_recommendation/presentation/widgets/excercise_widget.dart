@@ -4,6 +4,7 @@ import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/expandable_text_widget.dart';
 import 'package:gym_guardian_membership/utility/gemini_helper.dart';
 import 'package:gym_guardian_membership/utility/helper.dart';
+import 'package:gym_guardian_membership/utility/router.dart';
 import 'package:gym_guardian_membership/workout_recommendation/data/models/exercise_model.dart';
 import 'package:gym_guardian_membership/workout_recommendation/presentation/widgets/excercise_timer_widget.dart';
 import 'package:gym_guardian_membership/workout_recommendation/presentation/widgets/youtube_widget.dart';
@@ -42,7 +43,7 @@ class ExcerciseWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Alat Digunakan",
+                  context.l10n.tools_used,
                   style: TextStyle(fontSize: 10.spMin),
                 ),
                 2.verticalSpacingRadius,
@@ -58,33 +59,33 @@ class ExcerciseWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Detail Informasi",
+                  context.l10n.detail_information,
                   style: TextStyle(fontSize: 10.spMin),
                 ),
                 2.verticalSpacingRadius,
                 InfoRow(
                   icon: Icons.timer_outlined,
-                  title: "Perkiraan Durasi",
+                  title: context.l10n.estimated_duration,
                   value: "${exerciseModel.duration} menit",
                 ),
                 InfoRow(
                   icon: Icons.repeat,
-                  title: "Set",
+                  title: context.l10n.set,
                   value: "${exerciseModel.sets} set",
                 ),
                 InfoRow(
                   icon: Icons.fitness_center,
-                  title: "Repetisi per Set",
+                  title: context.l10n.repetition_per_set,
                   value: "${exerciseModel.repsPerSet} reps",
                 ),
                 InfoRow(
                   icon: Icons.pause_circle_outlined,
-                  title: "Waktu Per Repetisi",
+                  title: context.l10n.duration_per_repetition,
                   value: "${exerciseModel.restBetweenReps} detik",
                 ),
                 InfoRow(
                   icon: Icons.pause_circle_outlined,
-                  title: "Istirahat Antar Set",
+                  title: context.l10n.rest_per_set,
                   value: "${exerciseModel.restBetweenSets} detik",
                 ),
               ],
@@ -95,7 +96,7 @@ class ExcerciseWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Manfaat",
+                  context.l10n.benefits,
                   style: TextStyle(fontSize: 10.spMin),
                 ),
                 2.verticalSpacingRadius,
@@ -111,7 +112,7 @@ class ExcerciseWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Cara Melakukan",
+                  context.l10n.how_to_do_it,
                   style: TextStyle(fontSize: 10.spMin),
                 ),
                 2.verticalSpacingRadius,
@@ -130,7 +131,7 @@ class ExcerciseWidget extends StatelessWidget {
                           backgroundColor: Colors.red, visualDensity: VisualDensity.compact),
                       onPressed: () {
                         showBlurredBottomSheet(
-                          context: context,
+                          context: parentKey.currentContext!,
                           builder: (context) {
                             return BlurContainerWrapper(
                               child: YoutubePlayerWidget(exerciseModel: exerciseModel),
@@ -139,8 +140,8 @@ class ExcerciseWidget extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        "Lihat Video Tutorial",
-                        style: bebasNeue.copyWith(fontSize: 15.spMin),
+                        context.l10n.show_video_tutorial,
+                        style: bebasNeue.copyWith(fontSize: 15.spMin, color: Colors.white),
                       )),
                 ),
                 10.horizontalSpaceRadius,
@@ -149,7 +150,7 @@ class ExcerciseWidget extends StatelessWidget {
                       style: FilledButton.styleFrom(visualDensity: VisualDensity.compact),
                       onPressed: () {
                         showBlurredBottomSheet(
-                          context: context,
+                          context: parentKey.currentContext!,
                           builder: (context) => BlurContainerWrapper(
                               child: ExcerciseTimerWidget(
                             exerciseModel: exerciseModel,
@@ -157,7 +158,7 @@ class ExcerciseWidget extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        "Mulai Latihan",
+                        context.l10n.start_workout,
                         style: bebasNeue.copyWith(fontSize: 15.spMin),
                       )),
                 ),

@@ -46,9 +46,6 @@ class SplashContent extends StatelessWidget {
               onPressed: () {
                 tabController.animateTo(tabController.index + 1);
               },
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(Colors.black),
-              ),
               child: Text(
                 "Ayo Mulai",
                 style: bebasNeue.copyWith(fontSize: 20),

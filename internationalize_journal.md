@@ -1,0 +1,12 @@
+** Folder yang sudah selesai
+- Login
+- Registration
+- Preview Registration
+- Home
+- Body Measurement Tracker
+- detail_attendance_history
+- detail_coupon
+- detail_level
+- detail_point
+- gym schedule
+- pricing plan

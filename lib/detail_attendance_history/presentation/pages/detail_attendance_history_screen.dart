@@ -11,6 +11,7 @@ import 'package:gym_guardian_membership/utility/blurred_dialogue_widget.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/empty_state_widget.dart';
 import 'package:gym_guardian_membership/utility/helper.dart';
+import 'package:gym_guardian_membership/utility/router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:os_basecode/os_basecode.dart';
 
@@ -125,7 +126,7 @@ class _DetailAttendanceHistoryScreenState extends State<DetailAttendanceHistoryS
                     pinned: true,
                     title: isScrolled
                         ? Text(
-                            "Semua Riwayat Kehadiran",
+                            context.l10n.all_attendance_history,
                             style: bebasNeue.copyWith(fontSize: 20.spMin),
                           )
                         : null,
@@ -141,7 +142,7 @@ class _DetailAttendanceHistoryScreenState extends State<DetailAttendanceHistoryS
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            "Semua Riwayat Kehadiran",
+                            context.l10n.all_attendance_history,
                             style: bebasNeue.copyWith(fontSize: 20.spMin),
                           ),
                         ],
@@ -156,7 +157,7 @@ class _DetailAttendanceHistoryScreenState extends State<DetailAttendanceHistoryS
                       return ListTile(
                         onTap: () {
                           showBlurredBottomSheet(
-                            context: context,
+                            context: parentKey.currentContext!,
                             builder: (context) {
                               if (item.attendanceType == "IN") {
                                 return BlurContainerWrapper(
@@ -195,7 +196,9 @@ class _DetailAttendanceHistoryScreenState extends State<DetailAttendanceHistoryS
                         ),
                         trailing: Icon(Icons.chevron_right_outlined),
                         title: Text(
-                          item.attendanceType == "IN" ? "CHECK IN" : "CHECK OUT",
+                          item.attendanceType == "IN"
+                              ? context.l10n.check_in.toUpperCase()
+                              : context.l10n.check_out.toUpperCase(),
                           style: TextStyle(fontSize: 14.spMin, fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
@@ -221,15 +224,14 @@ class _DetailAttendanceHistoryScreenState extends State<DetailAttendanceHistoryS
                         padding: EdgeInsets.all(10),
                         child: Center(
                           child: Text(
-                            "Tidak ada lagi data",
+                            context.l10n.no_more_data,
                           ),
                         ),
                       );
                     },
                     noItemsFoundIndicatorBuilder: (context) => EmptyStateWidget(
-                        title: "Belum Ada Riwayat Kehadiran",
-                        subtitle:
-                            "Kamu belum mengikuti sesi apa pun. Riwayat kehadiranmu akan muncul di sini setelah kamu melakukan check-in."),
+                        title: context.l10n.attendance_history_empty_title,
+                        subtitle: context.l10n.attendance_history_empty_subtitle),
                   ),
                 )
               ],

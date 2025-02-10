@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gym_guardian_membership/login/presentation/widgets/primary_button.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/workout_recommendation/data/models/exercise_model.dart';
 import 'package:os_basecode/os_basecode.dart';
 import 'package:y_player/y_player.dart';
@@ -46,7 +47,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                   CircularProgressIndicator.adaptive(),
                   10.verticalSpacingRadius,
                   Text(
-                    "Menyiapkan Video..",
+                    context.l10n.preparing_videos,
                   )
                 ],
               ),
@@ -59,7 +60,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                   ),
                   5.verticalSpacingRadius,
                   Text(
-                    "Ada Kendala Saat Meminta Video Referensi",
+                    context.l10n.got_problem_videos,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   5.verticalSpacingRadius,
@@ -69,7 +70,7 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
                         style: FilledButton.styleFrom(visualDensity: VisualDensity.compact),
                         onPressed: () {},
                         child: Text(
-                          "Minta Ulang Video",
+                          context.l10n.reload_video,
                           style: bebasNeue.copyWith(color: Colors.white, fontSize: 18.spMin),
                         ),
                       ))
@@ -79,20 +80,20 @@ class _YoutubePlayerWidgetState extends State<YoutubePlayerWidget> {
           ),
           10.verticalSpacingRadius,
           Text(
-            "Tutorial Cara Menggunakan Alat",
+            context.l10n.how_to_use_video,
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.spMin),
           ),
           SizedBox(
             width: 0.8.sw,
             child: Text(
-              "**Jika kamu ragu, silahkan bertanya kepada Personal Trainer atau staff pengelola tentang cara penggunaannya",
+              context.l10n.how_to_use_video_note,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 10.spMin, color: Colors.black54),
             ),
           ),
-          40.verticalSpacingRadius,
+          20.verticalSpacingRadius,
           PrimaryButton(
-            title: "Tutup",
+            title: context.l10n.close,
             onPressed: () {
               context.pop();
             },

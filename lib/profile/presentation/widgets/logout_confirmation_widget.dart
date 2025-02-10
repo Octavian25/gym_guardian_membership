@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gym_guardian_membership/homepage/presentation/bloc/logout_member_bloc/logout_member_bloc.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/custom_toast.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 class LogoutConfirmationWidget extends StatelessWidget {
@@ -36,12 +37,12 @@ class LogoutConfirmationWidget extends StatelessWidget {
             ),
             10.verticalSpacingRadius,
             Text(
-              "Ready to Leave?",
+              context.l10n.logout_dialog_title,
               style: bebasNeue.copyWith(fontSize: 25.spMin),
             ),
             5.verticalSpacingRadius,
             Text(
-              "Logging out will disconnect you from your account. Don’t worry—you can log back in anytime!",
+              context.l10n.logout_dialog_subtitle,
               textAlign: TextAlign.center,
             ),
           ],
@@ -54,13 +55,13 @@ class LogoutConfirmationWidget extends StatelessWidget {
               onPressed: () {
                 context.pop();
               },
-              child: Text("No, Stay Logged In!")),
+              child: Text(context.l10n.logout_dialog_negavite)),
           TextButton(
               style: TextButton.styleFrom(foregroundColor: Colors.red),
               onPressed: () {
                 context.read<LogoutMemberBloc>().add(DoLogoutMember());
               },
-              child: Text("Yes, Logout"))
+              child: Text(context.l10n.logout_dialog_positive))
         ],
       ),
     );

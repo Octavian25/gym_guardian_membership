@@ -7,6 +7,7 @@ import 'package:gym_guardian_membership/pricing_plan/domain/entities/pricing_pla
 import 'package:gym_guardian_membership/pricing_plan/presentation/bloc/fetch_all_pricing_plan_bloc/fetch_all_pricing_plan_bloc.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/custom_toast.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 class PricingPlanScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _PricingPlanScreenState extends State<PricingPlanScreen> {
 
   void handlePreviewAccount() async {
     if (selectedPlan == null) {
-      showError("Anda belum memilih paket berlangganan", context);
+      showError(context.l10n.your_not_select_plan, context);
       return;
     }
     PreviewRegistrationEntity? previewRegistrationEntity;
@@ -31,9 +32,7 @@ class _PricingPlanScreenState extends State<PricingPlanScreen> {
       previewRegistrationEntity = previewState.previewRegistrationEntity;
     }
     if (previewRegistrationEntity == null) {
-      showError(
-          "Anda melewatkan pengisian data diri, silahkan kembali dan isi data diri terlebih dahulu",
-          context);
+      showError(context.l10n.your_skip_fill_data, context);
       return;
     }
     previewRegistrationEntity.setPricingPlan(selectedPlan!);
@@ -55,7 +54,7 @@ class _PricingPlanScreenState extends State<PricingPlanScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16),
           sliver: SliverToBoxAdapter(
             child: Text(
-              "Paket Berlangganan",
+              context.l10n.pricing_plan_title,
               style: bebasNeue.copyWith(fontSize: 30.spMin),
             ),
           ),
@@ -64,7 +63,7 @@ class _PricingPlanScreenState extends State<PricingPlanScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16),
           sliver: SliverToBoxAdapter(
             child: Text(
-              "Silahkan pilih paket berlangganan yang anda inginkan",
+              context.l10n.pricing_plan_subtitle,
             ),
           ),
         ),
@@ -105,7 +104,8 @@ class _PricingPlanScreenState extends State<PricingPlanScreen> {
                     planEntity.packageName,
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text("Durasi : ${planEntity.duration} Hari"),
+                  subtitle:
+                      Text("${context.l10n.duration} : ${planEntity.duration} ${context.l10n.day}"),
                   leading: selectedPlan == planEntity
                       ? Icon(
                           Icons.check_circle,
@@ -131,7 +131,7 @@ class _PricingPlanScreenState extends State<PricingPlanScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16),
           sliver: SliverToBoxAdapter(
             child: PrimaryButton(
-              title: "Tinjau Akun",
+              title: context.l10n.preview_account,
               onPressed: handlePreviewAccount,
             ),
           ),
@@ -173,7 +173,7 @@ class ErrorBuilderWidget extends StatelessWidget {
                     visualDensity: VisualDensity.compact, backgroundColor: Colors.blueGrey),
                 onPressed: handleReload,
                 icon: Icon(Icons.replay),
-                label: Text("Muat Ulang")),
+                label: Text(context.l10n.reload)),
             5.verticalSpacingRadius,
           ],
         );

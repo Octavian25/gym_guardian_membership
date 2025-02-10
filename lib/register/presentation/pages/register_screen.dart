@@ -9,6 +9,7 @@ import 'package:gym_guardian_membership/utility/custom_select_field.dart';
 import 'package:gym_guardian_membership/utility/custom_text_form_field.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/custom_toast.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -64,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void handleRegistration() async {
     if (registrationKey.currentState!.validate()) {
       if (passwordController.text != repasswordController.text) {
-        showError("Password tidak sama", context);
+        showError(context.l10n.password_not_match, context);
         return;
       }
       PreviewRegistrationEntity previewRegistrationEntity = PreviewRegistrationEntity(
@@ -103,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
               child: Text(
-                "Daftar Member Baru",
+                context.l10n.sign_up_new_member,
                 style: bebasNeue.copyWith(fontSize: 30.spMin),
               ),
             ),
@@ -112,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
               child: Text(
-                "Silahkan masukan data diri anda",
+                context.l10n.sign_up_new_member_subtitle,
               ),
             ),
           ),
@@ -126,14 +127,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Informasi Pribadi",
+                      context.l10n.personal_information,
                       style: bebasNeue.copyWith(fontSize: 20.spMin),
                     ),
                     Divider(),
                     10.verticalSpacingRadius,
                     CustomTextFormField(
                       controller: fullNameController,
-                      title: "Nama Lengkap",
+                      title: context.l10n.full_name,
                       isRequired: true,
                       textInputAction: TextInputAction.done,
                     ),
@@ -143,7 +144,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Expanded(
                           child: CustomSelectField<String>(
                             controller: genderController,
-                            title: "Jenis Kelamin",
+                            title: context.l10n.gender,
                             isRequired: true,
                             selected: gender,
                             textInputAction: TextInputAction.next,
@@ -161,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Expanded(
                           child: CustomTextFormField(
                             controller: ageController,
-                            title: "Umur",
+                            title: context.l10n.age,
                             isRequired: true,
                             textInputType: TextInputType.number,
                             textInputAction: TextInputAction.next,
@@ -175,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Expanded(
                           child: CustomTextFormField(
                             controller: heightController,
-                            title: "Tinggi ( Cm )",
+                            title: context.l10n.height,
                             isRequired: true,
                             textInputType: TextInputType.number,
                           ),
@@ -184,7 +185,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Expanded(
                           child: CustomTextFormField(
                             controller: weightController,
-                            title: "Berat ( Kg )",
+                            title: context.l10n.weight,
                             isRequired: true,
                             textInputType: TextInputType.number,
                           ),
@@ -194,27 +195,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomTextFormField(
                       controller: phoneController,
-                      title: "Nomor Telepon",
+                      title: context.l10n.phone_number,
                       isRequired: true,
                       textInputType: TextInputType.phone,
                     ),
                     16.verticalSpacingRadius,
                     CustomTextFormField(
                       controller: emailController,
-                      title: "Alamat Email",
+                      title: context.l10n.email,
                       isRequired: true,
                       textInputType: TextInputType.emailAddress,
                     ),
                     16.verticalSpacingRadius,
                     Text(
-                      "Informasi Umum",
+                      context.l10n.public_information,
                       style: bebasNeue.copyWith(fontSize: 20.spMin),
                     ),
                     Divider(),
                     10.verticalSpacingRadius,
                     CustomSelectField<String>(
                       controller: goalController,
-                      title: "Apa Tujuan Utam Anda ?",
+                      title: context.l10n.public_information_1,
                       isRequired: true,
                       selected: goal,
                       onSelect: (value) {
@@ -235,7 +236,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomSelectField<String>(
                       controller: activityLevelController,
-                      title: "Seberapa aktif Anda sekarang ?",
+                      title: context.l10n.public_information_2,
                       isRequired: true,
                       selected: activityLevel,
                       onSelect: (value) {
@@ -254,7 +255,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomSelectField<String>(
                       controller: workoutPreferenceController,
-                      title: "Jenis latihan apa yang Anda sukai?",
+                      title: context.l10n.public_information_3,
                       isRequired: true,
                       selected: workoutPreference,
                       onSelect: (value) {
@@ -273,7 +274,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomSelectField<String>(
                       controller: workoutDurationController,
-                      title: "Berapa lama waktu yang Anda miliki untuk latihan?",
+                      title: context.l10n.public_information_4,
                       isRequired: true,
                       selected: workoutDuration,
                       onSelect: (value) {
@@ -292,7 +293,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomSelectField<String>(
                       controller: workoutAtController,
-                      title: "Kapan Anda lebih sering berolahraga?",
+                      title: context.l10n.public_information_5,
                       isRequired: true,
                       selected: workoutAt,
                       onSelect: (value) {
@@ -311,7 +312,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomSelectField<String>(
                       controller: specialConditionController,
-                      title: "Apakah anda memiliki kondisi khusus yang perlu diperhatikan?",
+                      title: context.l10n.public_information_6,
                       isRequired: true,
                       selected: specialCondition,
                       onSelect: (value) {
@@ -330,7 +331,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomTextFormField(
                       controller: conditionController,
-                      title: "Jika ada, tuliskan kondisi khusus Anda",
+                      title: context.l10n.public_information_7,
                       isRequired: false,
                       enabled: specialCondition != "Tidak Ada",
                       textInputAction: TextInputAction.next,
@@ -338,7 +339,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomSelectField<String>(
                       controller: motivationController,
-                      title: "Apa motivasi terbesa Anda untuk memulai latihan?",
+                      title: context.l10n.public_information_8,
                       isRequired: true,
                       selected: motivation,
                       onSelect: (value) {
@@ -358,14 +359,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     16.verticalSpacingRadius,
                     CustomTextFormField(
                       controller: passwordController,
-                      title: "Kata Sandi",
+                      title: context.l10n.password,
                       isRequired: true,
                       obsecureText: true,
                     ),
                     16.verticalSpacingRadius,
                     CustomTextFormField(
                       controller: repasswordController,
-                      title: "Ulang Kata Sandi",
+                      title: context.l10n.re_password,
                       isRequired: true,
                       obsecureText: true,
                     ),
@@ -379,7 +380,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverToBoxAdapter(
               child: PrimaryButton(
-                title: "Lanjutkan",
+                title: context.l10n.next,
                 onPressed: handleRegistration,
               ),
             ),
@@ -389,9 +390,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Center(
               child: RichText(
                 text: TextSpan(children: [
-                  TextSpan(text: "Sudah punya akun?", style: TextStyle(color: Colors.black)),
                   TextSpan(
-                      text: " Masuk!",
+                      text: context.l10n.already_have_account,
+                      style: TextStyle(color: Colors.black)),
+                  TextSpan(
+                      text: " ${context.l10n.enter}!",
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           context.go("/login");

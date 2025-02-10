@@ -1,0 +1,2 @@
+abstract class GymScheduleLocalDataSource {}
+class GymScheduleLocalDataSourceImpl implements GymScheduleLocalDataSource {}

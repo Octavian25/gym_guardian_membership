@@ -52,13 +52,13 @@ class _DetailAttendanceOutPopupWidgetState extends State<DetailAttendanceOutPopu
           ),
           Center(
             child: Text(
-              "Selamat!", // Translated
+              "${context.l10n.congrats}!", // Translated
               style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
             ),
           ),
           Center(
             child: Text(
-              "Teruslah berlatih untuk mencapai level berikutnya!", // Translated and improved
+              "${context.l10n.checkout_message}!", // Translated and improved
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 11.spMin),
             ),
@@ -70,7 +70,7 @@ class _DetailAttendanceOutPopupWidgetState extends State<DetailAttendanceOutPopu
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Check Out",
+                  context.l10n.check_out,
                   style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.w300),
                 ),
                 5.verticalSpacingRadius,
@@ -89,7 +89,7 @@ class _DetailAttendanceOutPopupWidgetState extends State<DetailAttendanceOutPopu
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Poin yang Didapatkan", // Translated
+                  context.l10n.point_earned, // Translated
                   style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.w300),
                 ),
                 5.verticalSpacingRadius,

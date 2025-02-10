@@ -18,24 +18,24 @@ class EmptyStateWidget extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        5.verticalSpacingRadius,
+        10.verticalSpacingRadius,
         SizedBox(
           width: 0.8.sw,
           child: Center(
             child: Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.spMin),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.spMin),
             ),
           ),
         ),
-        5.verticalSpacingRadius,
         SizedBox(
           width: 0.8.sw,
           child: Center(
             child: Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12.spMin),
+              style: TextStyle(fontSize: 12.spMin, color: Colors.black54),
             ),
           ),
         ),

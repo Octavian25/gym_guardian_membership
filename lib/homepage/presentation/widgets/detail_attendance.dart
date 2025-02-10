@@ -22,13 +22,13 @@ class DetailAttendanceWidget extends StatelessWidget {
               ),
             Center(
               child: Text(
-                "Informasi Kehadiran",
+                context.l10n.checkin_info,
                 style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
               ),
             ),
             Center(
               child: Text(
-                "Detail kehadiranmu: Check In, Check Out, dan poin yang kamu dapat!",
+                context.l10n.detail_attendance_popup,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 11.spMin),
               ),
@@ -46,7 +46,7 @@ class DetailAttendanceWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "Check In",
+                      context.l10n.check_in,
                       style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.w300),
                     ),
                     5.verticalSpacingRadius,

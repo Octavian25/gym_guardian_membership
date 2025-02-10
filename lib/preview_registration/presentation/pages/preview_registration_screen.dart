@@ -7,6 +7,7 @@ import 'package:gym_guardian_membership/preview_registration/domain/entities/pre
 import 'package:gym_guardian_membership/preview_registration/presentation/bloc/preview_registration_bloc/preview_registration_bloc.dart';
 import 'package:gym_guardian_membership/preview_registration/presentation/bloc/workout_suggestions_bloc/workout_suggestions_bloc.dart';
 import 'package:gym_guardian_membership/preview_registration/presentation/pages/term_and_condition.dart';
+import 'package:gym_guardian_membership/preview_registration/presentation/widgets/information_detail.dart';
 import 'package:gym_guardian_membership/register/domain/entities/register_request_entity.dart';
 import 'package:gym_guardian_membership/register/presentation/bloc/register_member_bloc/register_member_bloc.dart';
 import 'package:gym_guardian_membership/utility/base_sliver_padding.dart';
@@ -14,6 +15,7 @@ import 'package:gym_guardian_membership/utility/blurred_dialogue_widget.dart';
 
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/custom_toast.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 class PreviewRegistrationScreen extends StatefulWidget {
@@ -81,7 +83,7 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: SliverToBoxAdapter(
                   child: Text(
-                    "Periksa Kembali Data Anda",
+                    context.l10n.preview_registration_data_title,
                     style: bebasNeue.copyWith(fontSize: 30.spMin),
                   ),
                 ),
@@ -90,7 +92,7 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: SliverToBoxAdapter(
                   child: Text(
-                    "Silahkan periksa kembali data anda, jika sudah benar silahkan tekan daftar ",
+                    context.l10n.preview_registration_data_subtitle,
                   ),
                 ),
               ),
@@ -109,36 +111,36 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                               children: [
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Full Name",
+                                    title: context.l10n.full_name,
                                     value: data.fullName,
                                   ),
                                 ),
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Phone Number",
+                                    title: context.l10n.phone_number,
                                     value: data.phoneNumber,
                                   ),
                                 ),
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Gender",
+                                    title: context.l10n.gender,
                                     value: data.gender,
                                   ),
                                 )
                               ],
                             ),
-                            InformationDetail(title: "Email", value: data.emailAddress),
+                            InformationDetail(title: context.l10n.email, value: data.emailAddress),
                             Row(
                               children: [
                                 Expanded(
                                     child: InformationDetail(
-                                        title: "Age", value: data.age.toString())),
+                                        title: context.l10n.age, value: data.age.toString())),
                                 Expanded(
                                     child: InformationDetail(
-                                        title: "Height (cm)", value: data.height.toString())),
+                                        title: context.l10n.height, value: data.height.toString())),
                                 Expanded(
                                     child: InformationDetail(
-                                        title: "Weight (Kg)", value: data.weight.toString()))
+                                        title: context.l10n.weight, value: data.weight.toString()))
                               ],
                             ),
                             Divider(),
@@ -146,13 +148,13 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                               children: [
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Goals",
+                                    title: context.l10n.goals,
                                     value: data.goal,
                                   ),
                                 ),
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Activity Level",
+                                    title: context.l10n.activity_level,
                                     value: data.activityLevel,
                                   ),
                                 )
@@ -162,13 +164,13 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                               children: [
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Workout Preferences",
+                                    title: context.l10n.workout_preference,
                                     value: data.workoutPreference,
                                   ),
                                 ),
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Workout Duration",
+                                    title: context.l10n.workout_duration,
                                     value: data.workoutDuration,
                                   ),
                                 )
@@ -178,13 +180,13 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                               children: [
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Preference Workout At",
+                                    title: context.l10n.workout_at,
                                     value: data.workoutAt,
                                   ),
                                 ),
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Special Condition",
+                                    title: context.l10n.special_condition,
                                     value: data.specialCondition,
                                   ),
                                 )
@@ -195,13 +197,13 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                                 if (data.condition != null)
                                   Expanded(
                                     child: InformationDetail(
-                                      title: "Condition *",
+                                      title: "${context.l10n.condition} *",
                                       value: data.condition!,
                                     ),
                                   ),
                                 Expanded(
                                   child: InformationDetail(
-                                    title: "Motivation",
+                                    title: context.l10n.motivation,
                                     value: data.motivation,
                                   ),
                                 )
@@ -209,7 +211,7 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                             ),
                             Divider(),
                             Text(
-                              "Paket Dipilih",
+                              context.l10n.selected_plan,
                               style: TextStyle(fontSize: 12.spMin),
                             ),
                             ListTile(
@@ -219,7 +221,8 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                                 data.selectedPricingPlan?.packageName ?? "-",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              subtitle: Text("Durasi : ${data.selectedPricingPlan?.duration} Hari"),
+                              subtitle: Text(
+                                  "${context.l10n.duration} : ${data.selectedPricingPlan?.duration} ${context.l10n.day}"),
                               leading: Icon(
                                 Icons.check_circle,
                                 color: primaryColor,
@@ -241,10 +244,10 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                               title: RichText(
                                   text: TextSpan(children: [
                                 TextSpan(
-                                    text: "Saya setuju dengan",
+                                    text: context.l10n.im_agree_with,
                                     style: GoogleFonts.montserrat(color: Colors.black)),
                                 TextSpan(
-                                    text: " syarat dan ketentuan yang berlaku",
+                                    text: " ${context.l10n.term_and_condition}",
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         var result = await showBlurredBottomSheet(
@@ -273,7 +276,7 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                           ],
                         );
                       } else {
-                        return Text("Terdapat kesalahan saat menampilkan data");
+                        return Text("We got some error, Please try again later.");
                       }
                     },
                   ),
@@ -283,7 +286,7 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 sliver: SliverToBoxAdapter(
                   child: PrimaryButton(
-                    title: "REGISTER",
+                    title: context.l10n.sign_up,
                     onPressed: acceptTermAndCondition ? handleRegister : null,
                   ),
                 ),
@@ -293,257 +296,6 @@ class _PreviewRegistrationScreenState extends State<PreviewRegistrationScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class WorkoutSuggestionResultWidget extends StatelessWidget {
-  const WorkoutSuggestionResultWidget(
-      {super.key, required this.data, required this.handleReCreate});
-  final PreviewRegistrationEntity data;
-  final Function(String promp) handleReCreate;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 1.sw,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: BlocBuilder<WorkoutSuggestionsBloc, WorkoutSuggestionsState>(
-          builder: (context, state) {
-            if (state is WorkoutSuggestionsSuccess) {
-              return SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Rekomendasi Jadwal Dari Kami",
-                      style: bebasNeue.copyWith(fontSize: 23.spMin),
-                    ),
-                    Text(
-                      state.datas.notes,
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        fontSize: 11.spMin,
-                      ),
-                    ),
-                    Divider(),
-                    ListView.builder(
-                      padding: EdgeInsets.zero,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: state.datas.weeklyPlan.length,
-                      itemBuilder: (context, index) {
-                        WeeklyPlan weeklyPlan = state.datas.weeklyPlan[index];
-                        return Theme(
-                          data: ThemeData().copyWith(
-                              dividerColor: Colors.transparent,
-                              textTheme: GoogleFonts.montserratTextTheme()),
-                          child: ExpansionTile(
-                            tilePadding: EdgeInsets.zero,
-                            leading: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  weeklyPlan.workout.activity
-                                      .fold<int>(
-                                        0,
-                                        (previousValue, element) =>
-                                            previousValue + element.duration,
-                                      )
-                                      .toString(),
-                                  style: bebasNeue.copyWith(fontSize: 20.spMin),
-                                ),
-                                Text(
-                                  "Menit",
-                                  style: TextStyle(fontSize: 9.spMin),
-                                )
-                              ],
-                            ),
-                            title: Text(
-                              weeklyPlan.day,
-                              style: bebasNeue.copyWith(fontSize: 23.spMin),
-                            ),
-                            subtitle: Text(
-                              "Sentuh Untuk Melihat Detail Rencana",
-                              style: TextStyle(fontSize: 11.spMin, color: Colors.black38),
-                            ),
-                            children: weeklyPlan.workout.activity.map((e) {
-                              return ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: Icon(
-                                  Icons.schedule,
-                                  color: Colors.grey,
-                                ),
-                                title: Text(
-                                  e.name,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(
-                                  e.description,
-                                  style: TextStyle(fontSize: 11.spMin),
-                                ),
-                                trailing: Text(e.duration.toString()),
-                              );
-                            }).toList(),
-                          ),
-                        );
-                      },
-                    ),
-                    Text(
-                      "**Gemini AI telah menyusun jadwal ini untuk membantu Anda mencapai tujuan fitness Anda.",
-                      style: TextStyle(fontSize: 11.spMin),
-                    ),
-                    20.verticalSpacingRadius,
-                    Center(
-                      child: Text(
-                        "Butuh rekomendasi lain yang lebih sesuai?",
-                        style: TextStyle(fontSize: 12.spMin),
-                      ),
-                    ),
-                    Center(
-                      child: TextButton(
-                        child: Text("Buat Ulang Rekomendasi"),
-                        onPressed: () async {
-                          TextEditingController controller = TextEditingController();
-                          await showDialog(
-                            context: context,
-                            builder: (context) {
-                              return GestureDetector(
-                                onTap: () {
-                                  FocusManager.instance.primaryFocus!.unfocus();
-                                },
-                                child: AlertDialog(
-                                  backgroundColor: Colors.white,
-                                  title: Text("Ingin Lebih Personal ?"),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                          "Buat Perintah Sesuai Keiinganmu, Contohnya : Saya ingin libur pada hari senin dan rabu"),
-                                      TextFormField(
-                                        controller: controller,
-                                        minLines: 1,
-                                        maxLines: 5,
-                                        decoration:
-                                            InputDecoration(labelText: "Masukan Perintah Anda"),
-                                      )
-                                    ],
-                                  ),
-                                  actions: [
-                                    PrimaryButton(
-                                      title: "Buat Rekomendasi",
-                                      onPressed: () {
-                                        context.pop();
-                                        handleReCreate(controller.text);
-                                      },
-                                    ),
-                                    SizedBox(
-                                      width: 1.sw,
-                                      child: TextButton(
-                                          onPressed: () {
-                                            context.pop();
-                                          },
-                                          child: Text("Batal")),
-                                    )
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                    10.verticalSpacingRadius,
-                    PrimaryButton(
-                      title: "Simpan Rekomendasi",
-                      onPressed: () {
-                        context.pop();
-                      },
-                    ),
-                    20.verticalSpacingRadius,
-                  ],
-                ),
-              );
-            } else if (state is WorkoutSuggestionsFailure) {
-              return Center(
-                child: Text(state.message),
-              );
-            } else {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    "assets/ai.png",
-                    width: 0.4.sw,
-                  )
-                      .animate(
-                        onPlay: (controller) => controller.repeat(period: 3.seconds),
-                      )
-                      .shimmer(
-                        duration: 2.seconds,
-                        delay: 1.seconds,
-                      ),
-                  10.verticalSpacingRadius,
-                  SizedBox(
-                    width: 0.7.sw,
-                    child: Text(
-                      "Tunggu Sebentar",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18.spMin, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 0.7.sw,
-                    child: Text(
-                      "Kami sedang memikirkan rekomendasi terbaik untuk anda",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12.spMin),
-                    ),
-                  ),
-                  10.verticalSpacingRadius,
-                  PrimaryButton(
-                    title: "Batal",
-                    onPressed: () {
-                      context.read<WorkoutSuggestionsBloc>().add(DoCancelWorkoutSuggestions());
-                    },
-                  ),
-                  10.verticalSpacingRadius,
-                ],
-              );
-            }
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class InformationDetail extends StatelessWidget {
-  final String title;
-  final String value;
-  const InformationDetail({
-    super.key,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 11.spMin),
-        ),
-        Text(
-          value,
-          style: TextStyle(fontSize: 14.spMin, fontWeight: FontWeight.bold),
-        ),
-        10.verticalSpacingRadius,
-      ],
     );
   }
 }

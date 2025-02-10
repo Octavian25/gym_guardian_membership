@@ -10,6 +10,7 @@ import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/custom_text_form_field.dart';
 import 'package:gym_guardian_membership/utility/custom_toast.dart';
 import 'package:gym_guardian_membership/utility/gemini_helper.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_confirmation_dialog.dart';
 import 'package:gym_guardian_membership/utility/show_bottom_dialog.dart';
 import 'package:os_basecode/os_basecode.dart';
@@ -98,8 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
               if (state.message.contains("already logged in")) {
                 showBottomConfirmationDialogueAlert(
                   imagePath: "assets/logout.png",
-                  title: "You are already logged in on another device",
-                  subtitle: "Do you want to log out from other device and log in from this device?",
+                  title: context.l10n.logout_other_device_title,
+                  subtitle: context.l10n.logout_other_device_subtitle,
                   handleConfirm: (context) {
                     context.read<LogoutMemberBloc>().add(DoForceLogout(emailController.text));
                     Navigator.pop(context);
@@ -109,7 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
               return;
             } else if (state is LoginMemberSuccess) {
               context.go("/homepage", extra: 'fetch');
-              showSuccessWithoutButton("Selamat Datang Kembali, ${state.datas.userId}", context);
+              showSuccessWithoutButton(
+                  "${context.l10n.welcome_back}, ${state.datas.userId}", context);
             }
           },
           child: Form(
@@ -121,23 +123,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "SELAMAT DATANG DI LOYALTY MEMBERSHIP!",
+                      context.l10n.welcome,
                       style: bebasNeue.copyWith(fontSize: 30.spMin),
                     ),
                     Text(
-                      "Silahkan login untuk lanjut kedalam aplikasi",
+                      context.l10n.please_login,
                     ),
                     39.verticalSpacingRadius,
                     CustomTextFormField(
                         controller: emailController,
-                        title: "Alamat Email",
+                        title: context.l10n.email,
                         isRequired: true,
                         textInputType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next),
                     14.verticalSpacingRadius,
                     CustomTextFormField(
                       controller: passwordController,
-                      title: "Kata Sandi",
+                      title: context.l10n.password,
                       obsecureText: true,
                       isRequired: true,
                       textInputAction: TextInputAction.done,
@@ -162,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // ),
                     35.verticalSpacingRadius,
                     PrimaryButton(
-                      title: "MASUK",
+                      title: context.l10n.enter,
                       onPressed: handleLogin,
                     ),
                     24.verticalSpacingRadius,
@@ -181,9 +183,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: RichText(
                         text: TextSpan(children: [
                           TextSpan(
-                              text: "Belum punya akun? ", style: TextStyle(color: Colors.black)),
+                              text: "${context.l10n.dont_have_account} ",
+                              style: TextStyle(color: Colors.black)),
                           TextSpan(
-                              text: " Daftar!",
+                              text: " ${context.l10n.sign_up}!",
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   context.go("/login/register");

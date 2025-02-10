@@ -13,7 +13,8 @@ abstract class HomepageRepository {
   Future<Either<Failure, int>> checkBookingSlotLeft();
   Future<Either<Failure, String>> requestBooking(String memberCode, String bookingDate);
   Future<Either<Failure, String>> cancelBooking(String memberCode);
-  Future<Either<Failure, RegisterAttendanceResponseEntity>> registerAttendance(String memberCode);
+  Future<Either<Failure, RegisterAttendanceResponseEntity>> registerAttendance(
+      String memberCode, String eligibleForPoints);
   Future<Either<Failure, String>> logoutMember(String userId, String refreshToken);
   Future<Either<Failure, BookingEntity>> fetchAllBooking(String memberCode, int? page, int? limit);
 }

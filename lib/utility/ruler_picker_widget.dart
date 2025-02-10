@@ -61,6 +61,8 @@ class SimpleRulerPicker extends StatefulWidget {
 
   final double horizontalPointerWidth;
 
+  final bool enabled;
+
   /// Creates a [SimpleRulerPicker] widget.
   ///
   /// The [minValue] must be less than or equal to [initialValue],
@@ -86,6 +88,7 @@ class SimpleRulerPicker extends StatefulWidget {
       this.selectedTextStyle,
       this.showSelectedText = true,
       this.isDecimal = false,
+      this.enabled = true,
       this.horizontalPointerWidth = 24 * 3,
       this.showBottomText = true})
       : assert(
@@ -93,10 +96,10 @@ class SimpleRulerPicker extends StatefulWidget {
         );
 
   @override
-  _SimpleRulerPickerState createState() => _SimpleRulerPickerState();
+  SimpleRulerPickerState createState() => SimpleRulerPickerState();
 }
 
-class _SimpleRulerPickerState extends State<SimpleRulerPicker> {
+class SimpleRulerPickerState extends State<SimpleRulerPicker> {
   late ScrollController _scrollController;
   late int _selectedValue;
   bool _isPosFixed = false;
@@ -148,7 +151,6 @@ class _SimpleRulerPickerState extends State<SimpleRulerPicker> {
 
     final initialItemMiddlePixels =
         (rangeFromMinValue * widget.scaleItemWidth) + (widget.scaleItemWidth / 2);
-
     _scrollController = ScrollController(
       initialScrollOffset: initialItemMiddlePixels,
     );
@@ -184,6 +186,7 @@ class _SimpleRulerPickerState extends State<SimpleRulerPicker> {
                           bottom: constraints.maxHeight / 2,
                         ),
                   controller: _scrollController,
+                  physics: widget.enabled ? null : NeverScrollableScrollPhysics(),
                   scrollDirection: widget.axis,
                   itemCount: (widget.maxValue - widget.minValue) + 1,
                   itemBuilder: (context, index) {

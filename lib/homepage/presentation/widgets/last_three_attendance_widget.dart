@@ -8,6 +8,7 @@ import 'package:gym_guardian_membership/utility/blurred_dialogue_widget.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/empty_state_widget.dart';
 import 'package:gym_guardian_membership/utility/helper.dart';
+import 'package:gym_guardian_membership/utility/router.dart';
 import 'package:os_basecode/os_basecode.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -38,8 +39,8 @@ class LastThreeAttendanceWidget extends StatelessWidget {
           if (state.datas.isEmpty) {
             return SliverToBoxAdapter(
                 child: EmptyStateWidget(
-              title: "Belum Ada Riwayat Kehadiran", // Translated
-              subtitle: "Kamu belum absen. Riwayat kehadiran akan muncul setelah kamu check-in.",
+              title: context.l10n.attendance_history_empty_title, // Translated
+              subtitle: context.l10n.attendance_history_empty_subtitle,
             ));
           }
 
@@ -50,7 +51,7 @@ class LastThreeAttendanceWidget extends StatelessWidget {
               return ListTile(
                 onTap: () {
                   showBlurredBottomSheet(
-                    context: context,
+                    context: parentKey.currentContext!,
                     builder: (context) {
                       if (data.attendanceType == "IN") {
                         return BlurContainerWrapper(
@@ -88,7 +89,7 @@ class LastThreeAttendanceWidget extends StatelessWidget {
                 ),
                 trailing: Icon(Icons.chevron_right_outlined),
                 title: Text(
-                  data.attendanceType == "IN" ? "CHECK IN" : "CHECK OUT",
+                  data.attendanceType == "IN" ? context.l10n.check_in : context.l10n.check_out,
                   style: TextStyle(fontSize: 14.spMin, fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(

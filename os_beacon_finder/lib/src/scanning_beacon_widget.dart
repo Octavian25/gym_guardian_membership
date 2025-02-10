@@ -85,75 +85,77 @@ class _ScanningBeaconWidgetState extends State<ScanningBeaconWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 1.sw,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (widget.title != null)
+    return SafeArea(
+      child: SizedBox(
+        width: 1.sw,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (widget.title != null)
+                Text(
+                  "${widget.title}",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              10.verticalSpacingRadius,
+              GestureDetector(
+                child: RepaintBoundary(
+                  child: Image.asset(
+                    "packages/os_beacon_finder/assets/radar.png",
+                    width: 0.6.sw,
+                  ).animate(onPlay: (controller) => controller.repeat(), effects: [
+                    ShakeEffect(hz: 2, duration: 2.seconds),
+                    ShimmerEffect(
+                        delay: 2.seconds, angle: 1, duration: 1.seconds, curve: Curves.easeInQuart),
+                  ]),
+                ),
+              ),
+              10.verticalSpacingRadius,
               Text(
-                "${widget.title}",
+                widget.descriptionTitle ?? "Sedang Mencari Perangkat Absensi",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 15.spMin, fontWeight: FontWeight.bold),
               ),
-            10.verticalSpacingRadius,
-            GestureDetector(
-              child: RepaintBoundary(
-                child: Image.asset(
-                  "packages/os_beacon_finder/assets/radar.png",
-                  width: 0.6.sw,
-                ).animate(onPlay: (controller) => controller.repeat(), effects: [
-                  ShakeEffect(hz: 2, duration: 2.seconds),
-                  ShimmerEffect(
-                      delay: 2.seconds, angle: 1, duration: 1.seconds, curve: Curves.easeInQuart),
-                ]),
+              Text(
+                widget.descriptionSubtitle ?? "Silahkan mendekat ke lokasi yang sudah ditentukan",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14.spMin),
               ),
-            ),
-            10.verticalSpacingRadius,
-            Text(
-              widget.descriptionTitle ?? "Sedang Mencari Perangkat Absensi",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15.spMin, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              widget.descriptionSubtitle ?? "Silahkan mendekat ke lokasi yang sudah ditentukan",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14.spMin),
-            ),
-            ValueListenableBuilder(
-              valueListenable: distance,
-              builder: (context, value, child) {
-                if (value != null) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      10.verticalSpacingRadius,
-                      Text(
-                        widget.distanceTitle ?? "Jarak Lokasi Absen",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16.spMin, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "${value.toStringAsFixed(2)} m",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  );
-                }
-                return Container();
-              },
-            ),
-            10.verticalSpacingRadius,
-            FilledButton(
-                onPressed: () {
-                  context.pop();
+              ValueListenableBuilder(
+                valueListenable: distance,
+                builder: (context, value, child) {
+                  if (value != null) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        10.verticalSpacingRadius,
+                        Text(
+                          widget.distanceTitle ?? "Jarak Lokasi Absen",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16.spMin, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${value.toStringAsFixed(2)} m",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    );
+                  }
+                  return Container();
                 },
-                child: Text(widget.cancelText ?? "Batal"))
-          ],
+              ),
+              10.verticalSpacingRadius,
+              FilledButton(
+                  onPressed: () {
+                    context.pop();
+                  },
+                  child: Text(widget.cancelText ?? "Batal"))
+            ],
+          ),
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:gym_guardian_membership/utility/constant.dart';
 import 'package:gym_guardian_membership/utility/custom_toast.dart';
 import 'package:gym_guardian_membership/utility/gemini_helper.dart';
 import 'package:gym_guardian_membership/utility/helper.dart';
+import 'package:gym_guardian_membership/utility/router.dart';
 import 'package:gym_guardian_membership/workout_recommendation/presentation/bloc/chat_history_bloc/chat_history_bloc.dart';
 import 'package:os_basecode/os_basecode.dart';
 
@@ -18,11 +19,15 @@ class BottomChatFormWidget extends StatefulWidget {
 }
 
 class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
-  List<String> suggestions = ["Buatkan Rekomendasi Workout", "Tantangan Workout"];
+  List<String> suggestions = [
+    parentKey.currentContext!.l10n.workout_recommendation,
+    parentKey.currentContext!.l10n.workout_challenge
+  ];
   handleTapShorcut(int indexSelected) async {
     var memberState = context.read<DetailMemberBloc>().state;
     if (memberState is DetailMemberSuccess) {
       var gymEquipment = getGymEquipment(context);
+      var lastWeekBodyMeasurementResult = getlastWeekBodyMeasurementData(context);
       if (indexSelected == 0) {
         await getOneWorkoutRecommendation(
             memberState.datas.memberName,
@@ -36,6 +41,7 @@ class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
             memberState.datas.availableTime,
             memberState.datas.specialCondition,
             null,
+            lastWeekBodyMeasurementResult,
             context);
       } else if (indexSelected == 1) {
         await getChallengeWorkout(
@@ -50,6 +56,7 @@ class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
             memberState.datas.availableTime,
             memberState.datas.specialCondition,
             null,
+            lastWeekBodyMeasurementResult,
             context);
       } else {
         showError("Error Saat Meminta Data Text Cepat", context);
@@ -57,8 +64,9 @@ class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
       }
       if (!mounted) return;
       context.read<ChatHistoryBloc>().add(DoLoadChatHistory());
+      FocusManager.instance.primaryFocus?.unfocus();
       widget.scrollController.animateTo(widget.scrollController.position.maxScrollExtent,
-          duration: 500.milliseconds, curve: Curves.ease);
+          duration: 100.milliseconds, curve: Curves.ease);
     }
   }
 
@@ -79,7 +87,7 @@ class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Text(
-                  "Text Cepat : ",
+                  "${context.l10n.quick_chat} : ",
                   style: TextStyle(fontSize: 10.spMin),
                 ),
               ),
@@ -132,7 +140,7 @@ class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
                       decoration: InputDecoration(
                           contentPadding: EdgeInsets.zero,
                           isDense: true,
-                          hintText: "Tuliskan Perintah",
+                          hintText: context.l10n.write_your_task,
                           border: InputBorder.none),
                     )),
                     10.horizontalSpaceRadius,
@@ -144,6 +152,8 @@ class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
                             var memberState = context.read<DetailMemberBloc>().state;
                             if (memberState is DetailMemberSuccess) {
                               var gymEquipment = getGymEquipment(context);
+                              var lastWeekBodyMeasurementResult =
+                                  getlastWeekBodyMeasurementData(context);
                               await getOneWorkoutRecommendation(
                                   memberState.datas.memberName,
                                   memberState.datas.age,
@@ -156,9 +166,11 @@ class _BottomChatFormWidgetState extends State<BottomChatFormWidget> {
                                   memberState.datas.availableTime,
                                   memberState.datas.specialCondition,
                                   widget.customPromptController.text,
+                                  lastWeekBodyMeasurementResult,
                                   context);
                               if (!context.mounted) return;
                               context.read<ChatHistoryBloc>().add(DoLoadChatHistory());
+                              FocusManager.instance.primaryFocus?.unfocus();
                               widget.scrollController.animateTo(
                                   widget.scrollController.position.maxScrollExtent,
                                   duration: 500.milliseconds,

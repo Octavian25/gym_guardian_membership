@@ -17,11 +17,11 @@ class DetailBookingWidget extends StatelessWidget {
             context.pop();
             context.pop();
             showBottomDialogueAlert(
-                buildContext: context,
-                imagePath: "assets/check.png", // Consider a more positive image
-                title: "Booking Dibatalkan!", // Added exclamation mark
+                buildContext: parentKey.currentContext!,
+                imagePath: "assets/congrats.png", // Consider a more positive image
+                title: context.l10n.cancel_booking_dialogue_tilte, // Added exclamation mark
                 subtitle:
-                    "Booking kamu sudah dibatalkan.  Sampai jumpa lagi!", // More concise and friendly
+                    context.l10n.cancel_booking_dialogue_subtitle, // More concise and friendly
                 duration: 5);
           }
         } else if (state is CancelBookingFailure) {
@@ -42,13 +42,13 @@ class DetailBookingWidget extends StatelessWidget {
             ),
             Center(
               child: Text(
-                "Info Booking", // More concise
+                context.l10n.reservation_info, // More concise
                 style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
               ),
             ),
             Center(
               child: Text(
-                "Perkiraan waktu, boleh dibatalkan lho!", // More concise and friendly
+                context.l10n.detail_booking_subtitle, // More concise and friendly
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 11.spMin),
               ),
@@ -65,7 +65,7 @@ class DetailBookingWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Tanggal",
+                    context.l10n.date,
                     style: TextStyle(fontSize: 12.spMin, fontWeight: FontWeight.w300),
                   ),
                   5.verticalSpacingRadius,
@@ -95,12 +95,12 @@ class DetailBookingWidget extends StatelessWidget {
                               ),
                               10.verticalSpacingRadius,
                               Text(
-                                "Beneran Mau Batalin?", // More friendly and concise
+                                context.l10n.cancel_booking_title, // More friendly and concise
                                 style: bebasNeue.copyWith(fontSize: 25.spMin),
                               ),
                               5.verticalSpacingRadius,
                               Text(
-                                "Gak papa kok kalau berubah pikiran.  Pembatalan akan menghapusnya dari jadwalmu.", // More friendly and concise
+                                context.l10n.cancel_booking_subtitle, // More friendly and concise
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -114,7 +114,8 @@ class DetailBookingWidget extends StatelessWidget {
                                 onPressed: () {
                                   dialogContext.pop();
                                 },
-                                child: Text("Gak Jadi, Lanjut!")), // More friendly and concise
+                                child: Text(context
+                                    .l10n.cancel_booking_negative)), // More friendly and concise
                             TextButton(
                                 style: TextButton.styleFrom(foregroundColor: Colors.red),
                                 onPressed: () {
@@ -122,14 +123,15 @@ class DetailBookingWidget extends StatelessWidget {
                                       .read<CancelBookingBloc>()
                                       .add(DoCancelBooking(datumBookingEntity.id));
                                 },
-                                child: Text("Batalkan Aja")) // More friendly and concise
+                                child: Text(context
+                                    .l10n.cancel_booking_positive)) // More friendly and concise
                           ],
                         ),
                       );
                       // if (!context.mounted) return;
                       // context.pop();
                     },
-                    child: Text("Batalkan Booking"))),
+                    child: Text(context.l10n.cancel_booking))),
           ],
         ),
       ),

@@ -126,9 +126,10 @@ class HomepageRepositoryImpl implements HomepageRepository {
 
   @override
   Future<Either<Failure, RegisterAttendanceResponseEntity>> registerAttendance(
-      String memberCode) async {
+      String memberCode, String eligibleForPoints) async {
     try {
-      var response = await homepageRemoteDataSource.registerAttendance(memberCode);
+      var response =
+          await homepageRemoteDataSource.registerAttendance(memberCode, eligibleForPoints);
       return Right(response.toEntity());
     } on DatabaseException catch (e) {
       return Left(DatabaseFailure(e.message));

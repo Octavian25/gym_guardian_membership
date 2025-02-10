@@ -13,7 +13,8 @@ class RegisterAttendanceBloc extends Bloc<RegisterAttendanceEvent, RegisterAtten
     on<DoRegisterAttendance>((event, emit) async {
       emit(RegisterAttendanceLoading());
       GlobalLoader.show();
-      var response = await registerAttendanceUsecase.execute(event.memberCode);
+      var response =
+          await registerAttendanceUsecase.execute(event.memberCode, event.eligibleForPoints);
       response.fold((l) {
         emit(RegisterAttendanceFailure(l.message));
       }, (r) {

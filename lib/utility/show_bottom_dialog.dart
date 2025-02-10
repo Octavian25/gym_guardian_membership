@@ -14,7 +14,7 @@ Future<void> showBottomDialogueAlert(
     required int duration,
     Function()? onTimerComplete,
     BuildContext? buildContext}) async {
-  return showBlurredBottomSheet(
+  return await showBlurredBottomSheet(
     context: buildContext ?? parentKey.currentContext!,
     builder: (context) {
       return BlurContainerWrapper(

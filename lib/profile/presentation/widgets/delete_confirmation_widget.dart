@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gym_guardian_membership/utility/constant.dart';
+import 'package:gym_guardian_membership/utility/helper.dart';
 import 'package:os_basecode/os_basecode.dart';
 
 class DeleteConfirmationWidget extends StatelessWidget {
@@ -20,12 +21,12 @@ class DeleteConfirmationWidget extends StatelessWidget {
           ),
           10.verticalSpacingRadius,
           Text(
-            "We're sad to see you go!",
+            context.l10n.delete_account_title,
             style: bebasNeue.copyWith(fontSize: 25.spMin),
           ),
           5.verticalSpacingRadius,
           Text(
-            "If you delete your account, you’ll lose all your data, points, and rewards permanently.",
+            context.l10n.delete_account_subtitle,
             textAlign: TextAlign.center,
           ),
         ],
@@ -38,11 +39,11 @@ class DeleteConfirmationWidget extends StatelessWidget {
             onPressed: () {
               context.pop();
             },
-            child: Text("Nevermind, Keep It!")),
+            child: Text(context.l10n.delete_account_positive)),
         TextButton(
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             onPressed: () {},
-            child: Text("Yes, Delete my Account"))
+            child: Text(context.l10n.delete_account_negative))
       ],
     );
   }

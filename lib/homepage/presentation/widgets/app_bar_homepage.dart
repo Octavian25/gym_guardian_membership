@@ -26,28 +26,29 @@ class AppBarHomepage extends StatelessWidget {
           ),
         ),
         pinned: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                showBottomDialogueAlert(
-                    imagePath: "assets/sad.png",
-                    title: "Fitur Baru Segera!",
-                    subtitle:
-                        "Fitur ini masih dalam pengembangan, tapi akan segera hadir! Tunggu ya!",
-                    duration: 3);
-              },
-              icon: Icon(
-                Icons.notifications_none,
-                size: 25.spMin,
-              )),
-          16.horizontalSpaceRadius,
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         FocusManager.instance.primaryFocus?.unfocus();
+        //         showBottomDialogueAlert(
+        //             imagePath: "assets/sad.png",
+        //             title: "Fitur Baru Segera!",
+        //             subtitle:
+        //                 "Fitur ini masih dalam pengembangan, tapi akan segera hadir! Tunggu ya!",
+        //             duration: 3);
+        //       },
+        //       icon: Icon(
+        //         Icons.notifications_none,
+        //         size: 25.spMin,
+        //       )),
+        //   16.horizontalSpaceRadius,
+        // ],
         centerTitle: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Selamat Datang",
+              AppLocalizations.of(context)!.welcome,
               style: TextStyle(fontSize: 12.spMin),
             ),
             BlocBuilder<DetailMemberBloc, DetailMemberState>(
@@ -59,7 +60,7 @@ class AppBarHomepage extends StatelessWidget {
                   );
                 } else if (state is DetailMemberFailure) {
                   return Text(
-                    "Gagal Mengambil Data",
+                    "Failed communication with server, please try again later.",
                     style: TextStyle(fontSize: 17.spMin, fontWeight: FontWeight.bold),
                   );
                 } else {
